@@ -24,7 +24,8 @@ const MenuBar: React.FC = () => {
 
   return (
     <div
-      className="fixed top-0 left-0 w-full h-7 flex items-center justify-between px-4 bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 text-xs select-none"
+      // Glassmorphism: semi-transparent, blurred, bordered, and shadowed
+      className="fixed top-0 left-0 w-full h-7 flex items-center justify-between px-4 bg-white/20 backdrop-blur-lg  shadow-md z-50 text-xs select-none"
       style={{ fontFamily: 'var(--font-xanh-mono), monospace' }}
     >
       {/* Left: Apple Icon and Portfolio Title */}
@@ -36,10 +37,10 @@ const MenuBar: React.FC = () => {
           className="w-5 h-6 mr-2" // Adjust size and spacing as needed
         />
         {/* Portfolio title */}
-        <span className="font-bold text-sm underline font-mono">Syed Mohammad Anas's Portfolio</span>
+        <span className="font-bold text-white text-sm underline font-mono">Syed Mohammad Anas's Portfolio</span>
             <div className="flex gap-2 text-gray-700 font-mono font-light">
-                <a href="#contact" className="hover:underline hover:text-blue-500">Contact</a>
-                <a href="#resume" className="hover:underline hover:text-blue-500">Resume</a>
+                <a href="#contact" className="text-white hover:underline hover:text-blue-500">Contact</a>
+                <a href="#resume" className="text-white hover:underline hover:text-blue-500">Resume</a>
             </div>
       </div>
 
@@ -49,18 +50,18 @@ const MenuBar: React.FC = () => {
       {/* Right: System Icons and Time */}
       <div className="flex items-center gap-3 text-gray-700">
         {/* System icons (WiFi, Sun, Battery) */}
-        <Wifi className="w-5 h-5" />
-        <Sun className="w-5 h-5" />
-        <BatteryFull className="w-5 h-5" />
+        <Wifi className="text-white w-5 h-5" />
+        <Sun className="text-white w-5 h-5" />
+        <BatteryFull className="text-white w-5 h-5" />
         {/* Date and Time */}
-        <span className="ml-2 font-mono font-bold text-black">
+        <span className="text-white ml-2 font-mono font-bold text-black">
           {new Date().toLocaleDateString("en-US", {
             weekday: "long",
             month: "long",
             day: "numeric",
           })}
         </span>
-        <span className="ml-1 font-mono font-bold text-black">{time}</span>
+        <span className="text-white ml-1 font-mono font-bold text-black">{time}</span>
       </div>
     </div>
   );

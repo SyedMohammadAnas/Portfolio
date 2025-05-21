@@ -138,10 +138,20 @@ export default function Home() {
           transition={{ duration: 0.7, delay: 0.3 }}
           className="fixed inset-0 flex flex-col items-center justify-center z-30 pointer-events-none"
         >
-          {/* Small welcome text */}
-          <div className="text-3xl text-white drop-shadow- mb-7.5 font-medium font-sans">welcome to my</div>
-          {/* Large, Cormorant Garamond Light Italic 'portfolio.' with negative margin to reduce gap */}
-          <div className="text-[120px] text-white font-bold font-cormorant-garamond -mt-10 -mb-6">Portfolio.</div>
+          {/* Small welcome text with blend mode for color inversion and strong text shadow fallback */}
+          <div
+            className="text-3xl text-white drop-shadow- mb-7.5 font-medium font-sans"
+            style={{ mixBlendMode: 'difference', textShadow: '0 2px 16px #000, 0 1px 0 #fff' , zIndex: 2 }}
+          >
+            welcome to my
+          </div>
+          {/* Large, Cormorant Garamond Light Italic 'portfolio.' with blend mode and strong text shadow fallback */}
+          <div
+            className="text-[120px] text-white font-bold font-cormorant-garamond -mt-10 -mb-6"
+            style={{ mixBlendMode: 'difference', textShadow: '0 4px 32px #000, 0 2px 0 #fff', zIndex: 2 }}
+          >
+            Portfolio.
+          </div>
         </motion.div>
 
         {/* Dock (bottom center) */}
