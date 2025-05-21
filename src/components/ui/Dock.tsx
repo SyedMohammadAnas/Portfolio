@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 // ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
@@ -62,13 +63,9 @@ const Dock: React.FC = () => {
                 className="flex flex-col items-center cursor-pointer select-none"
                 style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
               >
-                {/* ICON IMAGE - Framer-like rendering for sharpness */}
-                {/*
-                  NOTE: Using <img> here due to Next.js <Image> limitations with AVIF icons and dynamic mapping.
-                  The ESLint warning is intentionally ignored as per project requirements.
-                */}
+                {/* ICON IMAGE - Now using Next.js <Image /> for optimization and linter compliance */}
                 <div className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'transparent' }}>
-                  <img
+                  <Image
                     src={icon.src}
                     alt={icon.alt}
                     width={50}
@@ -76,6 +73,8 @@ const Dock: React.FC = () => {
                     className="block w-full h-full object-fill object-center"
                     draggable={false}
                     style={{ userSelect: 'none', imageRendering: 'auto', borderRadius: 'inherit' }}
+                    // Next.js Image optimization for AVIF icons
+                    unoptimized
                   />
                 </div>
                 {/* ICON LABEL (hidden by default) */}

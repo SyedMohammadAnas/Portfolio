@@ -19,3 +19,6 @@
 [Failed Attempt] Used stricter event typing for Framer Motion drag events, but reverted to 'any' due to type incompatibility.
 [Success] Fixed explicit 'any' type error in src/app/page.tsx by using correct types: event as MouseEvent | TouchEvent | PointerEvent, info as PanInfo from framer-motion.
 [Info] Intentionally ignored <img> warning in src/components/ui/Dock.tsx. Added comment explaining <img> is used due to Next.js <Image> limitations with AVIF icons and dynamic mapping.
+
+[Timestamp: <to-be-filled>]
+SUCCESS: Cleared all linter errors in src/app/page.tsx (removed unused imports) and src/components/ui/Dock.tsx (replaced <img> with <Image />). Previous build failed due to these errors, now resolved.

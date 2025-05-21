@@ -1,12 +1,10 @@
 'use client';
-import { Card } from "@/components/ui/card";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import MenuBar from "@/components/MenuBar";
 import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
 import StickyNote from "@/components/ui/StickyNote";
 import Image from "next/image";
-import { User, FileText } from "lucide-react";
 
 
 // Main portfolio desktop page for Syed Mohammad Anas
