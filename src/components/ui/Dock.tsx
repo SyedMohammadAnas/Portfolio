@@ -3,19 +3,20 @@ import { motion } from "framer-motion";
 
 // ICONS DATA ARRAY - Only use icons that exist in /public/media
 const dockIcons = [
-  { src: "/media/appleSafari.png", alt: "Safari" },
-  { src: "/media/appleMusic.png", alt: "Music" },
-  { src: "/media/appleMessages.png", alt: "Messages" },
-  { src: "/media/appleNotes.png", alt: "Notes" },
-  { src: "/media/appleReminders.png", alt: "Reminders" },
-  { src: "/media/appleMails.png", alt: "Mail" },
-  { src: "/media/appleAppstore.png", alt: "App Store" },
+  { src: "/media/icons/appleFinder.avif", alt: "Finder" },
+  { src: "/media/icons/appleSafari.avif", alt: "Safari" },
+  { src: "/media/icons/appleMusic.avif", alt: "Music" },
+  { src: "/media/icons/appleMessages.avif", alt: "Messages" },
+  { src: "/media/icons/appleNotes.avif", alt: "Notes" },
+  { src: "/media/icons/appleReminders.avif", alt: "Reminders" },
+  { src: "/media/icons/appleMails.avif", alt: "Mail" },
+  { src: "/media/icons/appleAppstore.avif", alt: "App Store" },
   { src: "/media/appleHome.png", alt: "Home" },
-  { src: "/media/appleMaps.png", alt: "Maps" },
-  { src: "/media/appleFacetime.png", alt: "FaceTime" },
+  { src: "/media/icons/appleMaps.avif", alt: "Maps" },
+  { src: "/media/icons/appleFacetime.avif", alt: "FaceTime" },
   // Optionally add folder and trash if you want them in the dock
-  { src: "/media/appleFolder.png", alt: "Folder", divider: true },
-  { src: "/media/appleTrash.png", alt: "Trash" },
+  { src: "/media/icons/appleFolder.avif", alt: "Folder", divider: true },
+  { src: "/media/icons/appleTrash.avif", alt: "Trash" },
 ];
 
 /**
