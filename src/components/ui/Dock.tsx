@@ -29,7 +29,7 @@ const dockIcons = [
 const Dock: React.FC = () => {
   return (
     <div
-      className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-2"
+      className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-8"
       style={{ minWidth: 340, maxWidth: '96vw' }}
     >
       {/* Dock background */}

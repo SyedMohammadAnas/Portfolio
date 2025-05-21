@@ -154,7 +154,7 @@ export default function Home() {
           {/* Small welcome text */}
           <div className="text-4xl font-medium font-sans">welcome to my</div>
           {/* Large, Cormorant Garamond Light Italic 'portfolio.' with negative margin to reduce gap */}
-          <div className="text-[150px] font-bold font-cormorant-garamond -mt-10 -mb-5">portfolio<span className="text-4xl not-italic font-sans">.</span></div>
+          <div className="text-[150px] font-bold font-cormorant-garamond -mt-10 -mb-5">Portfolio.</div>
         </motion.div>
 
         {/* Dock (bottom center) */}
