@@ -25,8 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`min-h-screen w-full bg-grid ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* All text uses default font stack, grid background and min-h-screen applied globally */}
         {children}
       </body>
     </html>

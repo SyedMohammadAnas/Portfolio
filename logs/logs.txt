@@ -1,0 +1,13 @@
+[2024-05-21 12:40] SUCCESS: Created and integrated MenuBar component (MacOS-style menu bar) into the portfolio landing page. No linter errors detected. All imports and styles verified.
+
+[2024-05-21 12:45] INFO: Preparing to add MacOS-style SVG/PNG assets for folders, trash, and dock icons to the public directory for visual polish and interactivity.
+
+[2024-05-21 12:50] SUCCESS: Refactored dock to use MacOS-style PNG icons from /public/media, added Framer Motion hover/active effects, and enhanced visual polish (glassy background, shadow, scaling, bounce).
+
+[2024-05-21 12:55] SUCCESS: Implemented draggable folders and trash using Framer Motion, with position state and z-index management for desktop interactivity. Updated icons to MacOS-style PNGs from /public/media.
+
+[2024-05-21 13:00] SUCCESS: Updated project folders to use provided MacOS-style appleFolder.png, with accurate label placement and no card background, matching the MacOS look. Drag-and-drop and z-index logic preserved.
+
+[2024-05-21 13:10] SUCCESS: Fixed folder drag handle to cover icon and label, implemented MacOS-style hover effect (highlight and blue label), and updated trash to use provided appleTrash.png as a standalone image. All visuals and interactivity now match MacOS closely.
+
+[2024-05-21 13:20] SUCCESS: Unified drag zone for folders (icon + label), animated blue label highlight, and larger, more accurate grey translucent icon highlight for MacOS look. Dragging and hover visuals now match MacOS closely.
