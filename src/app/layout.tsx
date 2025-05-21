@@ -25,9 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`min-h-screen w-full bg-grid ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`min-h-screen w-full ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* All text uses default font stack, grid background and min-h-screen applied globally */}
+        {/* Removed bg-grid: now using custom background image in page.tsx */}
         {children}
       </body>
     </html>

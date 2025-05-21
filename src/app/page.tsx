@@ -6,15 +6,16 @@ import { Folder, FileText, Trash2, User, Music, Globe, Info } from "lucide-react
 import MenuBar from "@/components/MenuBar";
 import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
+import StickyNote from "@/components/ui/StickyNote";
 
 // Main portfolio desktop page for Syed Mohammad Anas
 export default function Home() {
   // State for folder/trash positions and z-index
   const [items, setItems] = useState([
-    { id: 1, label: "Project 02 (Simplingo)", icon: "/media/appleFolder.png", x: 0, y: 0, z: 1, type: 'folder' },
-    { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/appleFolder.png", x: 0, y: 120, z: 1, type: 'folder' },
-    { id: 3, label: "Project 03 (Leafpress)", icon: "/media/appleFolder.png", x: 0, y: 240, z: 1, type: 'folder' },
-    { id: 4, label: "Don't Look", icon: "/media/appleTrash.png", x: 0, y: 360, z: 1, isTrash: true, type: 'trash' },
+    { id: 1, label: "Project 02 (Simplingo)", icon: "/media/Icons/appleFolder.avif", x: -350, y: 0, z: 1, type: 'folder' },
+    { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder' },
+    { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder' },
+    { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, isTrash: true, type: 'trash' },
   ]);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   // Track which folder is hovered for custom hover effect
@@ -37,27 +38,13 @@ export default function Home() {
       {/* MacOS-style Menu Bar */}
       <MenuBar />
       <div className="flex flex-col items-center justify-center w-full h-full relative">
-        {/* Sticky Note (To-Do) */}
-        <motion.div
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="absolute left-8 top-8 z-10"
-        >
-          <Card className="bg-yellow-100/90 border-yellow-300 shadow-lg rounded-xl w-64 p-4 font-mono">
-            <div className="font-bold text-base mb-2">To do:</div>
-            <ul className="text-sm space-y-1">
-              <li>Land my dream UX job</li>
-              <li>Drink water</li>
-              <li className="line-through text-gray-400">Move to the US</li>
-              <li>Finish grad school without losing my mind</li>
-              <li>Build that banger spotify playlist</li>
-              <li>World domination</li>
-              <li className="line-through text-gray-400">Get really good at making pasta</li>
-              <li>Travel somewhere new every year</li>
-            </ul>
-          </Card>
-        </motion.div>
+        {/* --- Background Image: covers entire viewport, sits behind all content --- */}
+        <div
+          className="portfolio-bg"
+          aria-hidden="true"
+        />
+        {/* Sticky Note (To-Do) extracted as a component */}
+        <StickyNote />
 
         {/* Folders and Files (right side) */}
         <div className="absolute right-8 top-24 flex flex-col items-center gap-8 z-10">
@@ -88,7 +75,7 @@ export default function Home() {
                         className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center z-0 pointer-events-none"
                         style={{ width: 80, height: 80 }}
                       >
-                        <div className="w-20 h-16 bg-black/15 border border-black/10" />
+                        <div className="w-20 h-16 bg-white/15 border border-white/30" />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -109,8 +96,8 @@ export default function Home() {
                       )}
                     </AnimatePresence>
                     <span
-                      className={`text-xs mt-1 text-center select-none px-1 rounded-sm z-10 ${hoveredId === item.id ? 'text-white' : 'text-black drop-shadow-sm'}`}
-                      style={hoveredId === item.id ? {textShadow: '0 1px 2px #007aff, 0 0px 8px #0002', position: 'relative'} : {textShadow: '0 1px 2px #fff, 0 0px 8px #0002', position: 'relative'}}
+                      className={`text-xs mt-1 text-center select-none px-1 rounded-sm z-10 text-white drop-shadow-sm`}
+                      style={{textShadow: hoveredId === item.id ? '0 1px 2px #007aff, 0 0px 8px #0002' : '0 1px 2px #fff, 0 0px 8px #0002', position: 'relative'}}
                     >
                       {item.label}
                     </span>
@@ -152,9 +139,9 @@ export default function Home() {
           className="fixed inset-0 flex flex-col items-center justify-center z-30 pointer-events-none"
         >
           {/* Small welcome text */}
-          <div className="text-4xl font-medium font-sans">welcome to my</div>
+          <div className="text-3xl text-white drop-shadow- mb-7.5 font-medium font-sans">welcome to my</div>
           {/* Large, Cormorant Garamond Light Italic 'portfolio.' with negative margin to reduce gap */}
-          <div className="text-[150px] font-bold font-cormorant-garamond -mt-10 -mb-5">Portfolio.</div>
+          <div className="text-[120px] text-white font-bold font-cormorant-garamond -mt-10 -mb-6">Portfolio.</div>
         </motion.div>
 
         {/* Dock (bottom center) */}
