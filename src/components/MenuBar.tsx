@@ -37,14 +37,10 @@ const MenuBar: React.FC = () => {
           alt="Apple Icon"
           width={20}
           height={24}
-          className="w-5 h-6 mr-2"
+          className="w-4 h-5 mr-2"
         />
         {/* Portfolio title */}
         <span className="font-bold text-white text-sm underline font-mono">Syed Mohammad Anas&apos;s Portfolio</span>
-            <div className="flex gap-2 text-gray-700 font-mono font-light">
-                <a href="#contact" className="text-white hover:underline hover:text-blue-500">Contact</a>
-                <a href="#resume" className="text-white hover:underline hover:text-blue-500">Resume</a>
-            </div>
       </div>
 
       {/* Center: Navigation Links */}
@@ -57,14 +53,14 @@ const MenuBar: React.FC = () => {
         <Sun className="text-white w-5 h-5" />
         <BatteryFull className="text-white w-5 h-5" />
         {/* Date and Time */}
-        <span className="text-white ml-2 font-mono font-bold text-black">
+        <span className="text-white ml-2 font-mono text-black">
           {new Date().toLocaleDateString("en-US", {
             weekday: "long",
             month: "long",
             day: "numeric",
           })}
         </span>
-        <span className="ml-1 font-mono font-bold text-black">{time}</span>
+        <span className="ml-1 font-mono text-white">{time}</span>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ const StickyNote: React.FC = () => (
     transition={{ duration: 0.7, delay: 0.2 }}
     className="absolute left-8 top-16 z-10"
   >
-    <Card className="bg-yellow-200 border-yellow-300 shadow-lg rounded-xl w-80 p-4 font-mono">
+    <Card className="bg-yellow-200 border-yellow-300 shadow-lg rounded-sm w-80 p-4 font-mono">
       <div className="font-bold text-base mb-2">To do:</div>
       <ul className="text-sm space-y-1">
         <li>Land my dream UX job</li>
