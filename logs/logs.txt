@@ -11,3 +11,9 @@
 [2024-05-21 13:10] SUCCESS: Fixed folder drag handle to cover icon and label, implemented MacOS-style hover effect (highlight and blue label), and updated trash to use provided appleTrash.png as a standalone image. All visuals and interactivity now match MacOS closely.
 
 [2024-05-21 13:20] SUCCESS: Unified drag zone for folders (icon + label), animated blue label highlight, and larger, more accurate grey translucent icon highlight for MacOS look. Dragging and hover visuals now match MacOS closely.
+
+[Success] All linter errors in src/app/page.tsx, src/components/MenuBar.tsx, src/components/ui/StickyNote.tsx fixed. Unused variables, explicit any, JSX parsing, and unescaped character errors resolved. <img> replaced with <Image> where required.
+[Success] src/components/ui/Dock.tsx already used <Image> from next/image, so no changes were needed.
+[Warning] <Image> usage may still show warnings if images are not in /public or if dynamic src is not statically analyzable by Next.js.
+[Failed Attempt] Tried to replace <img> with <Image> in Dock.tsx twice, but code was already correct.
+[Failed Attempt] Used stricter event typing for Framer Motion drag events, but reverted to 'any' due to type incompatibility.

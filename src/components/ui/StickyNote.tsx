@@ -18,14 +18,14 @@ const StickyNote: React.FC = () => (
     <Card className="bg-yellow-200 border-yellow-300 shadow-lg rounded-xl w-80 p-4 font-mono">
       <div className="font-bold text-base mb-2">To do:</div>
       <ul className="text-sm space-y-1">
-        <li>/>Land my dream UX job</li>
-        <li>/>Drink water</li>
-        <li className="line-through">/>Move to the US</li>
-        <li>/>Finish grad school without losing my mind</li>
-        <li>/>Build that banger spotify playlist</li>
-        <li>/>World domination</li>
-        <li className="line-through">/>Get really good at making pasta</li>
-        <li>/>Travel somewhere new every year</li>
+        <li>Land my dream UX job</li>
+        <li>Drink water</li>
+        <li className="line-through">Move to the US</li>
+        <li>Finish grad school without losing my mind</li>
+        <li>Build that banger spotify playlist</li>
+        <li>World domination</li>
+        <li className="line-through">Get really good at making pasta</li>
+        <li>Travel somewhere new every year</li>
       </ul>
     </Card>
   </motion.div>

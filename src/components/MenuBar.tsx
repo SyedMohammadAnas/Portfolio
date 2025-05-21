@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Wifi, BatteryFull, Sun } from "lucide-react";
+import Image from "next/image";
 
 // MenuBar component mimicking MacOS menu bar
 const MenuBar: React.FC = () => {
@@ -31,13 +32,15 @@ const MenuBar: React.FC = () => {
       {/* Left: Apple Icon and Portfolio Title */}
       <div className="flex items-center gap-2 font-bold text-black">
         {/* Apple icon on the far left */}
-        <img
-          src="/media/iconsPNG/appleIcon.png" // Path relative to public folder
+        <Image
+          src="/media/IconsPNG/appleIcon.png"
           alt="Apple Icon"
-          className="w-5 h-6 mr-2" // Adjust size and spacing as needed
+          width={20}
+          height={24}
+          className="w-5 h-6 mr-2"
         />
         {/* Portfolio title */}
-        <span className="font-bold text-white text-sm underline font-mono">Syed Mohammad Anas's Portfolio</span>
+        <span className="font-bold text-white text-sm underline font-mono">Syed Mohammad Anas&apos;s Portfolio</span>
             <div className="flex gap-2 text-gray-700 font-mono font-light">
                 <a href="#contact" className="text-white hover:underline hover:text-blue-500">Contact</a>
                 <a href="#resume" className="text-white hover:underline hover:text-blue-500">Resume</a>
@@ -61,7 +64,7 @@ const MenuBar: React.FC = () => {
             day: "numeric",
           })}
         </span>
-        <span className="text-white ml-1 font-mono font-bold text-black">{time}</span>
+        <span className="ml-1 font-mono font-bold text-black">{time}</span>
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
 'use client';
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { Folder, FileText, Trash2, User, Music, Globe, Info } from "lucide-react";
 import MenuBar from "@/components/MenuBar";
 import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
 import StickyNote from "@/components/ui/StickyNote";
+import Image from "next/image";
+import { User, FileText } from "lucide-react";
+
 
 // Main portfolio desktop page for Syed Mohammad Anas
 export default function Home() {
@@ -17,17 +18,18 @@ export default function Home() {
     { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder' },
     { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, isTrash: true, type: 'trash' },
   ]);
-  const [draggingId, setDraggingId] = useState<number | null>(null);
   // Track which folder is hovered for custom hover effect
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   // Handler for drag start
   const handleDragStart = (id: number) => {
-    setDraggingId(id);
     setItems((prev) => prev.map(item => item.id === id ? { ...item, z: 10 } : { ...item, z: 1 }));
   };
   // Handler for drag end
-  const handleDragEnd = (id: number, event: any, info: any) => {
-    setDraggingId(null);
+  const handleDragEnd = (
+    id: number,
+    event: any, // Framer Motion passes a synthetic event that may not match React's MouseEvent/TouchEvent/PointerEvent
+    info: { offset: { x: number; y: number } }
+  ) => {
     setItems((prev) => prev.map(item =>
       item.id === id ? { ...item, x: item.x + info.offset.x, y: item.y + info.offset.y, z: 1 } : item
     ));
@@ -80,7 +82,7 @@ export default function Home() {
                     )}
                   </AnimatePresence>
                   {/* Folder icon */}
-                  <img src={item.icon} alt={item.label} className="w-16 h-14 object-contain z-10 pointer-events-none" />
+                  <Image src={item.icon} alt={item.label} width={64} height={56} className="w-16 h-14 object-contain z-10 pointer-events-none" />
                   {/* Animated blue label highlight on hover */}
                   <div className="relative z-10 flex flex-col items-center w-full">
                     <AnimatePresence>
@@ -106,7 +108,7 @@ export default function Home() {
               ) : (
                 // Trash rendered as MacOS trash icon with label
                 <>
-                  <img src={item.icon} alt={item.label} className="w-14 h-16 object-contain z-10" />
+                  <Image src={item.icon} alt={item.label} width={56} height={64} className="w-14 h-16 object-contain z-10" />
                   <span className="text-xs mt-1 text-center text-black drop-shadow-sm select-none" style={{textShadow: '0 1px 2px #fff, 0 0px 8px #0002'}}>{item.label}</span>
                 </>
               )}
@@ -140,17 +142,24 @@ export default function Home() {
         >
           {/* Small welcome text with blend mode for color inversion and strong text shadow fallback */}
           <div
-            className="text-3xl text-white drop-shadow- mb-7.5 font-medium font-sans"
+            className="text-3xl text-white drop-shadow- -mb-5 font-medium font-sans"
             style={{ mixBlendMode: 'difference', textShadow: '0 2px 16px #000, 0 1px 0 #fff' , zIndex: 2 }}
           >
             welcome to my
           </div>
           {/* Large, Cormorant Garamond Light Italic 'portfolio.' with blend mode and strong text shadow fallback */}
           <div
-            className="text-[120px] text-white font-bold font-cormorant-garamond -mt-10 -mb-6"
-            style={{ mixBlendMode: 'difference', textShadow: '0 4px 32px #000, 0 2px 0 #fff', zIndex: 2 }}
+            className="relative flex items-center justify-center w-full mb-10 h-[140px]"
+            style={{ zIndex: 2 }}
           >
-            Portfolio.
+            {/* Shadow layers: absolutely positioned, behind the main text */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 1 }}>
+              {/* Main text: always on top, crisp and unaffected by shadow */}
+              <span
+                className="relative text-[120px] text-white font-bold font-cormorant-garamond select-none pointer-events-none">
+                Portfolio.
+              </span>
+            </div>
           </div>
         </motion.div>
 
