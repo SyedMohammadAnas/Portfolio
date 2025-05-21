@@ -1,6 +1,6 @@
 'use client';
 import { Card } from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import MenuBar from "@/components/MenuBar";
 import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
@@ -27,8 +27,8 @@ export default function Home() {
   // Handler for drag end
   const handleDragEnd = (
     id: number,
-    event: any, // Framer Motion passes a synthetic event that may not match React's MouseEvent/TouchEvent/PointerEvent
-    info: { offset: { x: number; y: number } }
+    event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
   ) => {
     setItems((prev) => prev.map(item =>
       item.id === id ? { ...item, x: item.x + info.offset.x, y: item.y + info.offset.y, z: 1 } : item

@@ -17,3 +17,5 @@
 [Warning] <Image> usage may still show warnings if images are not in /public or if dynamic src is not statically analyzable by Next.js.
 [Failed Attempt] Tried to replace <img> with <Image> in Dock.tsx twice, but code was already correct.
 [Failed Attempt] Used stricter event typing for Framer Motion drag events, but reverted to 'any' due to type incompatibility.
+[Success] Fixed explicit 'any' type error in src/app/page.tsx by using correct types: event as MouseEvent | TouchEvent | PointerEvent, info as PanInfo from framer-motion.
+[Info] Intentionally ignored <img> warning in src/components/ui/Dock.tsx. Added comment explaining <img> is used due to Next.js <Image> limitations with AVIF icons and dynamic mapping.

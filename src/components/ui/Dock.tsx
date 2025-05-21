@@ -63,6 +63,10 @@ const Dock: React.FC = () => {
                 style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
               >
                 {/* ICON IMAGE - Framer-like rendering for sharpness */}
+                {/*
+                  NOTE: Using <img> here due to Next.js <Image> limitations with AVIF icons and dynamic mapping.
+                  The ESLint warning is intentionally ignored as per project requirements.
+                */}
                 <div className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'transparent' }}>
                   <img
                     src={icon.src}
