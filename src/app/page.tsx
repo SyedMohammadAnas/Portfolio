@@ -6,6 +6,8 @@ import Dock from "@/components/ui/Dock";
 import StickyNote from "@/components/ui/StickyNote";
 import Image from "next/image";
 import ExplorerModal from "@/components/ui/ExplorerModal";
+// Import the Starfield animated background
+import Starfield from "@/components/ui/Starfield";
 
 
 // Main portfolio desktop page for Syed Mohammad Anas
@@ -52,6 +54,8 @@ export default function Home() {
       {/* MacOS-style Menu Bar */}
       <MenuBar />
       <div className="flex flex-col items-center justify-center w-full h-full relative">
+        {/* --- Animated Starfield Background Layer --- */}
+        <Starfield />
         {/* --- Background Image: covers entire viewport, sits behind all content --- */}
         <div
           className="portfolio-bg"
