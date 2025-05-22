@@ -61,9 +61,6 @@ export default function Home() {
           className="portfolio-bg"
           aria-hidden="true"
         />
-        {/* Sticky Note (To-Do) extracted as a component */}
-        <StickyNote />
-
         {/* Folders and Files (right side) */}
         <div className="absolute right-8 top-24 flex flex-col items-center gap-8 z-10">
           {/* Draggable folders and trash */}

@@ -21,13 +21,13 @@ const Starfield: React.FC = () => {
   const mouse = useRef<{ x: number; y: number; active: boolean }>({ x: 0, y: 0, active: false });
 
   // Number of stars to render
-  const STAR_COUNT = 100;
+  const STAR_COUNT = 200;
   // Maximum velocity for stars
-  const MAX_VEL = 0.5;
+  const MAX_VEL = 0.25;
   // Repulsion radius for mouse interaction
   const MOUSE_RADIUS = 100;
   // Repulsion strength
-  const MOUSE_FORCE = 1;
+  const MOUSE_FORCE = 2;
 
   // Initialize and animate stars
   useEffect(() => {

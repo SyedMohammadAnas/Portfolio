@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+// Import the real ExplorerModal
+import ExplorerModal from "./ExplorerModal";
+import StickyNote from "./StickyNote";
+import PhotoGalleryModal from "./PhotoGalleryModal";
 
 // ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
@@ -30,61 +34,123 @@ const dockIcons = [
  * - Responsive, glassy, and sharp
  */
 const Dock: React.FC = () => {
+  // State to control Explorer Modal visibility
+  const [explorerModalOpen, setExplorerModalOpen] = useState(false);
+  // State for selected project in ExplorerModal (default to 1)
+  const [selectedProjectId, setSelectedProjectId] = useState(1);
+  // State to control StickyNote visibility
+  const [stickyNoteOpen, setStickyNoteOpen] = useState(false);
+  // State to control PhotoGalleryModal visibility
+  const [galleryOpen, setGalleryOpen] = useState(false);
+
+  // Handler to change selected project
+  const handleSelectProject = (id: number) => setSelectedProjectId(id);
+
   return (
-    <div
-      className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-8"
-      style={{ minWidth: 340, maxWidth: '96vw' }}
-    >
-      {/* Dock background */}
+    <>
+      {/* Render ExplorerModal if open, pass all required props */}
+      <ExplorerModal
+        isOpen={explorerModalOpen}
+        onClose={() => setExplorerModalOpen(false)}
+        selectedProjectId={selectedProjectId}
+        onSelectProject={handleSelectProject}
+      />
+      {/* Render StickyNote if open */}
+      {stickyNoteOpen && (
+        <>
+          {/* Overlay to close sticky note on outside click */}
+          <div
+            className="fixed inset-0 z-20 bg-transparent cursor-pointer"
+            onClick={() => setStickyNoteOpen(false)}
+            aria-label="Close sticky note by clicking outside"
+          />
+          <StickyNote onClose={() => setStickyNoteOpen(false)} />
+        </>
+      )}
+      {/* Render PhotoGalleryModal if open */}
+      <PhotoGalleryModal isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
       <div
-        className="flex items-end gap-2 w-full px-4 py-2 rounded-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] bg-black/40 backdrop-blur-xl"
-        style={{
-          boxShadow: '0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 0 0 rgba(255,255,255,0.18) inset',
-          borderRadius: 22,
-        }}
+        className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-8"
+        style={{ minWidth: 340, maxWidth: '96vw' }}
       >
-        {/* ICONS ROW */}
-        {dockIcons.map((icon) => {
-          // Insert divider before the first icon with divider: true
-          const showDivider = icon.divider === true;
-          return (
-            <React.Fragment key={icon.alt}>
-              {showDivider && (
-                // Framer-like divider (vertical line)
-                <div
-                  className="mx-2 h-10 w-px bg-white/30 rounded-full self-center"
-                  aria-hidden="true"
-                />
-              )}
-              <motion.div
-                // Framer Motion: scale and lift on hover, but avoid upscaling beyond native resolution
-                whileHover={{ scale: 1.3, y: -20 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18, duration: 0.3 }}
-                className="flex flex-col items-center cursor-pointer select-none"
-                style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
-              >
-                {/* ICON IMAGE - Now using Next.js <Image /> for optimization and linter compliance */}
-                <div className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'transparent' }}>
-                  <Image
-                    src={icon.src}
-                    alt={icon.alt}
-                    width={50}
-                    height={50}
-                    className="block w-full h-full object-fill object-center"
-                    draggable={false}
-                    style={{ userSelect: 'none', imageRendering: 'auto', borderRadius: 'inherit' }}
-                    // Next.js Image optimization for AVIF icons
-                    unoptimized
+        {/* Dock background */}
+        <div
+          className="flex items-end gap-2 w-full px-4 py-2 rounded-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] bg-black/40 backdrop-blur-xl"
+          style={{
+            boxShadow: '0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 0 0 rgba(255,255,255,0.18) inset',
+            borderRadius: 22,
+          }}
+        >
+          {/* ICONS ROW */}
+          {dockIcons.map((icon) => {
+            // Insert divider before the first icon with divider: true
+            const showDivider = icon.divider === true;
+            // Check if this is the Finder icon
+            const isFinder = icon.alt === "Finder";
+            // Check if this is the Notes icon
+            const isNotes = icon.alt === "Notes";
+            // Check if this is the Photos icon
+            const isPhotos = icon.alt === "Photos";
+            return (
+              <React.Fragment key={icon.alt}>
+                {showDivider && (
+                  // Framer-like divider (vertical line)
+                  <div
+                    className="mx-2 h-10 w-px bg-white/30 rounded-full self-center"
+                    aria-hidden="true"
                   />
+                )}
+                {/* Wrapper for icon and tooltip, using group for hover state */}
+                <div className="relative flex flex-col items-center group">
+                  {/* Tooltip: shows on hover, absolutely positioned above the icon */}
+                  <span
+                    className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-7 px-3 py-1 rounded-md bg-white/80 text-xs text-black shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap select-none"
+                    // aria-hidden since it's only for visual feedback
+                    aria-hidden="true"
+                  >
+                    {icon.alt}
+                  </span>
+                  {/* Animated icon */}
+                  <motion.div
+                    // Framer Motion: scale and lift on hover, but avoid upscaling beyond native resolution
+                    whileHover={{ scale: 1.3, y: -20 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 18, duration: 0.3 }}
+                    className="flex flex-col items-center cursor-pointer select-none"
+                    style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
+                    // Only Finder, Notes, and Photos icons get onClick to open their modals
+                    onClick={
+                      isFinder
+                        ? () => setExplorerModalOpen(true)
+                        : isNotes
+                        ? () => setStickyNoteOpen(true)
+                        : isPhotos
+                        ? () => setGalleryOpen(true)
+                        : undefined
+                    }
+                  >
+                    {/* ICON IMAGE - Now using Next.js <Image /> for optimization and linter compliance */}
+                    <div className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'transparent' }}>
+                      <Image
+                        src={icon.src}
+                        alt={icon.alt}
+                        width={50}
+                        height={50}
+                        className="block w-full h-full object-fill object-center"
+                        draggable={false}
+                        style={{ userSelect: 'none', imageRendering: 'auto', borderRadius: 'inherit' }}
+                        // Next.js Image optimization for AVIF icons
+                        quality={100}
+                        priority
+                      />
+                    </div>
+                  </motion.div>
                 </div>
-                {/* ICON LABEL (hidden by default) */}
-                {/* <span className="text-xs mt-1 text-gray-200 drop-shadow">{icon.alt}</span> */}
-              </motion.div>
-            </React.Fragment>
-          );
-        })}
+              </React.Fragment>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
