@@ -1,7 +1,6 @@
 // NOTE: Do NOT add 'use client' to this file. This layout must be a server component to export metadata in Next.js App Router.
 // The LockScreen client component can still be rendered from here.
 
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LockScreen from "@/components/ui/LockScreen";

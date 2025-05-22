@@ -7,13 +7,10 @@ import Image from 'next/image';
 // Create context for lock state
 export const LockScreenContext = React.createContext({
   locked: true,
-  setLocked: (_: boolean) => {},
+  setLocked: (locked: boolean) => {},
 });
 
 // LockScreen component props (if needed in future)
-interface LockScreenProps {
-  // Add props here if you want to customize in the future
-}
 
 // Helper function to format date
 const formatDate = (date: Date) => {
@@ -35,7 +32,7 @@ const formatTime = (date: Date) => {
 
 const DRAG_THRESHOLD = -20; // Pixels to drag up before unlocking
 
-const LockScreen: React.FC<LockScreenProps> = () => {
+const LockScreen: React.FC = () => {
   // State for date and time
   const [now, setNow] = useState(new Date());
   // Use context for lock state
@@ -50,7 +47,7 @@ const LockScreen: React.FC<LockScreenProps> = () => {
   }, []);
 
   // Handler for drag end
-  const handleDragEnd = (_: any, info: { point: { y: number } }) => {
+  const handleDragEnd = (_event: unknown, info: { point: { y: number } }) => {
     // If dragged up past threshold, unlock
     if (info.point.y < DRAG_THRESHOLD) {
       controls.start({
