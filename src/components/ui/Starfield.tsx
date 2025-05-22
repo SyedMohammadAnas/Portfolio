@@ -57,7 +57,8 @@ const Starfield: React.FC = () => {
     let animationId: number;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let star of stars) {
+      // Use 'const' for star as it is not reassigned in the loop (ESLint prefer-const)
+      for (const star of stars) {
         // Move star
         star.x += star.vx;
         star.y += star.vy;
