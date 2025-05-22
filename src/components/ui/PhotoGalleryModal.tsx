@@ -27,10 +27,6 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
   // Current index in the slider
   const [current, setCurrent] = useState(2);
 
-  // Handle left/right navigation
-  const goLeft = () => setCurrent((prev) => Math.max(0, prev - 1));
-  const goRight = () => setCurrent((prev) => Math.min(IMAGES.length - 1, prev + 1));
-
   // Prevent background scroll when modal is open
   React.useEffect(() => {
     if (isOpen) {

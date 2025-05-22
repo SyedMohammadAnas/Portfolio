@@ -3,7 +3,6 @@ import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import MenuBar from "@/components/MenuBar";
 import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
-import StickyNote from "@/components/ui/StickyNote";
 import Image from "next/image";
 import ExplorerModal from "@/components/ui/ExplorerModal";
 // Import the Starfield animated background
@@ -122,20 +121,13 @@ export default function Home() {
 
         {/* Center Welcome Message */}
         {/* Centered absolutely in the viewport, above all other elements */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="fixed inset-0 flex flex-col items-center justify-center z-30 pointer-events-none"
-        >
-          {/* Small welcome text with blend mode for color inversion and strong text shadow fallback */}
-          <div
-            className="text-3xl text-white drop-shadow mb-60 font-medium font-sans"
-            style={{ mixBlendMode: 'difference', textShadow: '0 2px 16px #000, 0 1px 0 #fff' , zIndex: 2 }}
+        {/* Small welcome text with blend mode for color inversion and strong text shadow fallback */}
+        <div
+            className="fixed inset-0 flex flex-col items-center justify-center text-3xl text-white drop-shadow mb-60 font-medium font-sans"
+            style={{textShadow: '0 2px 16px #000, 0 1px 0 #fff' , zIndex: 2 }}
           >
             welcome to my
           </div>
-        </motion.div>
 
         {/* Dock (bottom center) */}
         <Dock />
