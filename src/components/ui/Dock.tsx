@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 // Import the real ExplorerModal
 import ExplorerModal from "./ExplorerModal";
 import StickyNote from "./StickyNote";
 import PhotoGalleryModal from "./PhotoGalleryModal";
+import { LockScreenContext } from './LockScreen';
 
 // ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
@@ -34,14 +35,14 @@ const dockIcons = [
  * - Responsive, glassy, and sharp
  */
 const Dock: React.FC = () => {
-  // State to control Explorer Modal visibility
+  const { locked } = useContext(LockScreenContext);
+  // All hooks must be called before any return (React rules of hooks)
   const [explorerModalOpen, setExplorerModalOpen] = useState(false);
-  // State for selected project in ExplorerModal (default to 1)
   const [selectedProjectId, setSelectedProjectId] = useState(1);
-  // State to control StickyNote visibility
   const [stickyNoteOpen, setStickyNoteOpen] = useState(false);
-  // State to control PhotoGalleryModal visibility
   const [galleryOpen, setGalleryOpen] = useState(false);
+
+  if (locked) return null; // Hide when lock screen is active
 
   // Handler to change selected project
   const handleSelectProject = (id: number) => setSelectedProjectId(id);

@@ -22,3 +22,9 @@
 
 [Timestamp: <to-be-filled>]
 SUCCESS: Cleared all linter errors in src/app/page.tsx (removed unused imports) and src/components/ui/Dock.tsx (replaced <img> with <Image />). Previous build failed due to these errors, now resolved.
+
+[Success] MacBook-style lock screen overlay implemented (2024-05-10):
+- Created LockScreen component with glassmorphism, date/time, profile picture, and name.
+- Used Framer Motion for drag-to-unlock animation.
+- Integrated overlay in RootLayout to cover all content on load.
+- All linter and dependency checks passed. No errors found.

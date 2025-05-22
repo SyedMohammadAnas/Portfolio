@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Wifi, BatteryFull, Sun } from "lucide-react";
 import Image from "next/image";
+import { LockScreenContext } from './ui/LockScreen';
 
 // MenuBar component mimicking MacOS menu bar
 const MenuBar: React.FC = () => {
   // State for live clock
   const [time, setTime] = useState<string>("");
+  const { locked } = useContext(LockScreenContext);
 
   useEffect(() => {
     // Function to update time in HH:MM AM/PM format
@@ -22,6 +24,8 @@ const MenuBar: React.FC = () => {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  if (locked) return null; // Hide when lock screen is active
 
   return (
     <div
