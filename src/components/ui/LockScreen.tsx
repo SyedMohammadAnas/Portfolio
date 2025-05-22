@@ -4,10 +4,16 @@ import React, { useEffect, useState, useContext } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
 
-// Create context for lock state
-export const LockScreenContext = React.createContext({
+// Define the context type for lock state
+export interface LockScreenContextType {
+  locked: boolean;
+  setLocked: (locked: boolean) => void;
+}
+
+// Create context for lock state with correct type
+export const LockScreenContext = React.createContext<LockScreenContextType>({
   locked: true,
-  setLocked: (locked: boolean) => {},
+  setLocked: () => {},
 });
 
 // LockScreen component props (if needed in future)
