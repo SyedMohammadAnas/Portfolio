@@ -59,7 +59,7 @@ const Dock: React.FC = () => {
               <motion.div
                 // Framer Motion: scale and lift on hover, but avoid upscaling beyond native resolution
                 whileHover={{ scale: 1.3, y: -20 }}
-                transition={{ type: "spring", stiffness: 200, damping: 18, duration: 0.3 }}
+                transition={{ type: "spring", stiffness: 300, damping: 18, duration: 0.3 }}
                 className="flex flex-col items-center cursor-pointer select-none"
                 style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
               >

@@ -5,19 +5,25 @@ import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
 import StickyNote from "@/components/ui/StickyNote";
 import Image from "next/image";
+import ExplorerModal from "@/components/ui/ExplorerModal";
 
 
 // Main portfolio desktop page for Syed Mohammad Anas
 export default function Home() {
   // State for folder/trash positions and z-index
   const [items, setItems] = useState([
-    { id: 1, label: "Project 02 (Simplingo)", icon: "/media/Icons/appleFolder.avif", x: -350, y: 0, z: 1, type: 'folder' },
-    { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder' },
-    { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder' },
-    { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'folder' },
+    { id: 1, label: "Project 02 (Simplingo)", icon: "/media/Icons/appleFolder.avif", x: -350, y: 0, z: 1, type: 'folder', projectId: 2 },
+    { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder', projectId: 1 },
+    { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
+    { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'trash' },
   ]);
   // Track which folder is hovered for custom hover effect
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  // State for ExplorerModal
+  const [explorerOpen, setExplorerOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<number>(1);
+
   // Handler for drag start
   const handleDragStart = (id: number) => {
     setItems((prev) => prev.map(item => item.id === id ? { ...item, z: 10 } : { ...item, z: 1 }));
@@ -31,6 +37,14 @@ export default function Home() {
     setItems((prev) => prev.map(item =>
       item.id === id ? { ...item, x: item.x + info.offset.x, y: item.y + info.offset.y, z: 1 } : item
     ));
+  };
+
+  // Handler for folder click
+  const handleFolderClick = (item: typeof items[number]) => {
+    if (item.type === 'folder' && item.projectId) {
+      setSelectedProjectId(item.projectId);
+      setExplorerOpen(true);
+    }
   };
 
   return (
@@ -60,6 +74,7 @@ export default function Home() {
               onMouseEnter={() => setHoveredId(item.id)}
               onMouseLeave={() => setHoveredId(null)}
               className="mb-4 flex flex-col items-center cursor-pointer group select-none"
+              onClick={() => handleFolderClick(item)}
             >
               {/* All items (folders and trash) rendered the same way */}
               {/* Animated highlight background on hover */}
@@ -123,6 +138,14 @@ export default function Home() {
 
         {/* Dock (bottom center) */}
         <Dock />
+
+        {/* Explorer Modal Integration */}
+        <ExplorerModal
+          isOpen={explorerOpen}
+          onClose={() => setExplorerOpen(false)}
+          selectedProjectId={selectedProjectId}
+          onSelectProject={setSelectedProjectId}
+        />
       </div>
     </>
   );
