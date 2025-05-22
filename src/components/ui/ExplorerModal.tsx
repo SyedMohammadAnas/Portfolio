@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 // Placeholder icons for random assignment
