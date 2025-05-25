@@ -5,6 +5,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LockScreen from "@/components/ui/LockScreen";
 import LockScreenProvider from "@/components/ui/LockScreenProvider";
+import { CursorProvider } from "@/components/ui/CursorContext";
+import CustomCursor from "@/components/ui/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +33,10 @@ export default function RootLayout({
           {/* MacBook-style LockScreen overlay (renders above all content) */}
           <LockScreen />
           {/* Main app content */}
-          {children}
+          <CursorProvider>
+            <CustomCursor />
+            {children}
+          </CursorProvider>
         </LockScreenProvider>
       </body>
     </html>

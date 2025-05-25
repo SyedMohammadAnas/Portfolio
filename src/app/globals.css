@@ -16,6 +16,7 @@ html, body {
   width: 100vw;
   /* Removed background: #fff; to allow custom background image to show */
   font-family: Arial, Helvetica, sans-serif;
+  cursor: none;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -153,3 +154,6 @@ body {
   z-index: -10;
   pointer-events: none; /* Ensure background is not interactive */
 }
+
+/* Force hide system cursor everywhere for custom cursor system */
+* { cursor: none !important; }

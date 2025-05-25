@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useCursor } from "./useCursor"; // Import custom cursor hook
 
 // Placeholder images (Unsplash or similar)
 const IMAGES = [
@@ -26,6 +27,9 @@ interface PhotoGalleryModalProps {
 const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }) => {
   // Current index in the slider
   const [current, setCurrent] = useState(2);
+  const setCursorType = useCursor(); // Get cursor setter
+  // State to track if carousel is being dragged
+  const [isDragging, setIsDragging] = useState(false);
 
   // Prevent background scroll when modal is open
   React.useEffect(() => {
@@ -62,25 +66,31 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
           >
             {/* MacOS-style title bar */}
             <div className="flex items-center h-8 px-4 border-b border-gray-200 bg-gray-50 relative select-none w-full">
-              {/* Window controls */}
+              {/* Window controls: set cursor to pointinghand on hover */}
               <div className="flex items-center gap-2">
                 <button
                   aria-label="Close"
                   onClick={onClose}
                   className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform"
                   style={{ boxShadow: '0 1px 2px #0002' }}
+                  onMouseEnter={() => setCursorType("pointinghand")}
+                  onMouseLeave={() => setCursorType("normal")}
                 />
                 <button
                   aria-label="Minimize"
                   onClick={onClose}
                   className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform"
                   style={{ boxShadow: '0 1px 2px #0002' }}
+                  onMouseEnter={() => setCursorType("pointinghand")}
+                  onMouseLeave={() => setCursorType("normal")}
                 />
                 <button
                   aria-label="Maximize"
                   onClick={onClose}
                   className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform"
                   style={{ boxShadow: '0 1px 2px #0002' }}
+                  onMouseEnter={() => setCursorType("pointinghand")}
+                  onMouseLeave={() => setCursorType("normal")}
                 />
               </div>
               {/* Centered title */}
@@ -104,11 +114,16 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
                   } else if (info.offset.x > threshold && current > 0) {
                     setCurrent(current - 1);
                   }
-                  // Otherwise, snap back to current
+                  setCursorType("openhand");
+                  setIsDragging(false);
                 }}
                 // Prevent text/image selection while dragging
                 dragElastic={0.18}
                 dragMomentum={false}
+                // Cursor logic for drag
+                onMouseEnter={() => !isDragging && setCursorType("openhand")}
+                onMouseLeave={() => { setCursorType("normal"); setIsDragging(false); }}
+                onDragStart={() => { setCursorType("closedhand"); setIsDragging(true); }}
               >
                 {IMAGES.map((src, idx) => {
                   // Calculate position relative to current

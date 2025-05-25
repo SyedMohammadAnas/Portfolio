@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useCursor } from "./useCursor"; // Import custom cursor hook
 
 // Placeholder icons for random assignment
 const ICONS = [
@@ -111,6 +112,10 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
   // Ref for icon area size
   const iconAreaRef = React.useRef<HTMLDivElement>(null);
 
+  const setCursorType = useCursor(); // Get cursor setter
+  // State to track if modal is being dragged
+  const [isDragging, setIsDragging] = React.useState(false);
+
   // Update drag constraints on mount and resize
   useEffect(() => {
     function updateConstraints() {
@@ -187,7 +192,12 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
             dragMomentum={false}
             style={{ boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)", zIndex: 101 }}
             ref={modalContainerRef}
-            onClick={e => e.stopPropagation()} // Prevent overlay click from closing when clicking inside modal
+            onClick={e => e.stopPropagation()}
+            // Cursor logic for drag
+            onMouseEnter={() => !isDragging && setCursorType("openhand")}
+            onMouseLeave={() => { setCursorType("normal"); setIsDragging(false); }}
+            onDragStart={() => { setCursorType("closedhand"); setIsDragging(true); }}
+            onDragEnd={() => { setCursorType("openhand"); setIsDragging(false); }}
           >
             {/* Layout: Sidebar (left) and Main (right) */}
             <div className="flex flex-row w-full h-full">
@@ -204,23 +214,30 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
               >
                 {/* Mac window controls at the top of sidebar */}
                 <div className="flex items-center gap-2 mt-3 mb-6 px-4">
+                  {/* Window controls: set cursor to pointinghand on hover */}
                   <button
                     aria-label="Close"
                     onClick={onClose}
                     className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform"
                     style={{ boxShadow: '0 1px 2px #0002' }}
+                    onMouseEnter={() => setCursorType("pointinghand")}
+                    onMouseLeave={() => setCursorType("normal")}
                   />
                   <button
                     aria-label="Minimize"
                     onClick={onClose}
                     className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform"
                     style={{ boxShadow: '0 1px 2px #0002' }}
+                    onMouseEnter={() => setCursorType("pointinghand")}
+                    onMouseLeave={() => setCursorType("normal")}
                   />
                   <button
                     aria-label="Maximize"
                     onClick={onClose}
                     className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform"
                     style={{ boxShadow: '0 1px 2px #0002' }}
+                    onMouseEnter={() => setCursorType("pointinghand")}
+                    onMouseLeave={() => setCursorType("normal")}
                   />
                 </div>
                 {/* Navigation sections with section headers and icons */}
@@ -233,6 +250,8 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                         <button
                           key={item}
                           className="flex items-center gap-2 px-4 py-1 rounded-md text-sm font-medium text-gray-800/90 hover:bg-white/30 transition-colors"
+                          onMouseEnter={() => setCursorType("pointinghand")}
+                          onMouseLeave={() => setCursorType("normal")}
                         >
                           {/* Placeholder icon (replace with real icons as needed) */}
                           <span className="text-[13px] text-gray-400">{['💼','👤','📄','🗑️'][idx]}</span>
@@ -250,6 +269,8 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                           key={proj.id}
                           className={`flex items-center gap-2 px-3 py-1 mx-2 rounded-md text-sm font-medium transition-colors ${selectedProjectId === proj.id ? "bg-black/10 text-gray-900 shadow-inner" : "hover:bg-white/40 text-gray-800/90"}`}
                           onClick={() => onSelectProject(proj.id)}
+                          onMouseEnter={() => setCursorType("pointinghand")}
+                          onMouseLeave={() => setCursorType("normal")}
                         >
                           {/* Apple folder icon beside project name */}
                           <Image src="/media/Icons/appleFolder.avif" alt="Folder" width={15} height={15} className="object-contain mr-2" />
@@ -291,6 +312,8 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                         rel="noopener noreferrer"
                         style={style}
                         className="flex flex-col items-center cursor-pointer group select-none"
+                        onMouseEnter={() => setCursorType("pointinghand")}
+                        onMouseLeave={() => setCursorType("normal")}
                       >
                         <div className="w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center border border-gray-200 shadow group-hover:scale-105 transition-transform">
                           <Image src={iconSrc} alt={item.name} width={40} height={40} className="object-contain" />
@@ -304,6 +327,8 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                         key={item.name}
                         style={style}
                         className="flex flex-col items-center cursor-pointer group select-none"
+                        onMouseEnter={() => setCursorType("pointinghand")}
+                        onMouseLeave={() => setCursorType("normal")}
                       >
                         <div className="w-12 h-12 bg-white/80 rounded-lg flex items-center justify-center border border-gray-200 shadow group-hover:scale-105 transition-transform">
                           <Image src={iconSrc} alt={item.name} width={40} height={40} className="object-contain" />

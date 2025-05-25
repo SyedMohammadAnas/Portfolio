@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Wifi, BatteryFull, Sun } from "lucide-react";
 import Image from "next/image";
-import { LockScreenContext } from './ui/LockScreen';
+import { LockScreenContext } from "@/components/ui/LockScreen";
 
 // MenuBar component mimicking MacOS menu bar
 const MenuBar: React.FC = () => {

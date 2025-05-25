@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useCursor } from "./useCursor"; // Import custom cursor hook
 // Import the real ExplorerModal
 import ExplorerModal from "./ExplorerModal";
 import StickyNote from "./StickyNote";
@@ -36,6 +37,7 @@ const dockIcons = [
  */
 const Dock: React.FC = () => {
   const { locked } = useContext(LockScreenContext);
+  const setCursorType = useCursor(); // Get cursor setter
   // All hooks must be called before any return (React rules of hooks)
   const [explorerModalOpen, setExplorerModalOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(1);
@@ -106,19 +108,16 @@ const Dock: React.FC = () => {
                   {/* Tooltip: shows on hover, absolutely positioned above the icon */}
                   <span
                     className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-7 px-3 py-1 rounded-md bg-white/80 text-xs text-black shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap select-none"
-                    // aria-hidden since it's only for visual feedback
                     aria-hidden="true"
                   >
                     {icon.alt}
                   </span>
                   {/* Animated icon */}
                   <motion.div
-                    // Framer Motion: scale and lift on hover, but avoid upscaling beyond native resolution
                     whileHover={{ scale: 1.3, y: -20 }}
                     transition={{ type: "spring", stiffness: 300, damping: 18, duration: 0.3 }}
                     className="flex flex-col items-center cursor-pointer select-none"
                     style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
-                    // Only Finder, Notes, and Photos icons get onClick to open their modals
                     onClick={
                       isFinder
                         ? () => setExplorerModalOpen(true)
@@ -128,6 +127,9 @@ const Dock: React.FC = () => {
                         ? () => setGalleryOpen(true)
                         : undefined
                     }
+                    // Set custom cursor on hover
+                    onMouseEnter={() => setCursorType("pointinghand")}
+                    onMouseLeave={() => setCursorType("normal")}
                   >
                     {/* ICON IMAGE - Now using Next.js <Image /> for optimization and linter compliance */}
                     <div className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'transparent' }}>

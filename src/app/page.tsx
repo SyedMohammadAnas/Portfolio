@@ -1,12 +1,13 @@
 'use client';
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import MenuBar from "@/components/MenuBar";
+import MenuBar from "@/components/ui/MenuBar";
 import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
 import Image from "next/image";
 import ExplorerModal from "@/components/ui/ExplorerModal";
 // Import the Starfield animated background
 import Starfield from "@/components/ui/Starfield";
+import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor hook
 
 
 // Main portfolio desktop page for Syed Mohammad Anas
@@ -24,6 +25,8 @@ export default function Home() {
   // State for ExplorerModal
   const [explorerOpen, setExplorerOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<number>(1);
+
+  const setCursorType = useCursor(); // Get cursor setter
 
   // Handler for drag start
   const handleDragStart = (id: number) => {
@@ -71,9 +74,9 @@ export default function Home() {
               style={{ x: item.x, y: item.y, zIndex: item.z, position: 'relative' }}
               onDragStart={() => handleDragStart(item.id)}
               onDragEnd={(event, info) => handleDragEnd(item.id, event, info)}
-              onMouseEnter={() => setHoveredId(item.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              className="mb-4 flex flex-col items-center cursor-pointer group select-none"
+              onMouseEnter={() => { setHoveredId(item.id); setCursorType("pointinghand"); }}
+              onMouseLeave={() => { setHoveredId(null); setCursorType("normal"); }}
+              className="mb-4 flex flex-col items-center select-none"
               onClick={() => handleFolderClick(item)}
             >
               {/* All items (folders and trash) rendered the same way */}
