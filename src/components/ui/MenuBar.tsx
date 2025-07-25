@@ -40,27 +40,27 @@ const MenuBar: React.FC = () => {
           className="w-4 h-5 mr-2"
         />
         {/* Portfolio title */}
-        <span className="font-bold text-white text-sm underline font-mono">Syed Mohammad Anas&apos;s Portfolio</span>
+        <span className="font-bold text-black text-sm underline font-mono">Syed Mohammad Anas&apos;s Portfolio</span>
       </div>
 
       {/* Center: Navigation Links */}
 
 
       {/* Right: System Icons and Time */}
-      <div className="flex items-center gap-3 text-gray-700">
+      <div className="flex items-center gap-3 text-black">
         {/* System icons (WiFi, Sun, Battery) */}
-        <Wifi className="text-white w-5 h-5" />
-        <Sun className="text-white w-5 h-5" />
-        <BatteryFull className="text-white w-5 h-5" />
+        <Wifi className="text-black w-5 h-5" />
+        <Sun className="text-black w-5 h-5" />
+        <BatteryFull className="text-black w-5 h-5" />
         {/* Date and Time */}
-        <span className="text-white ml-2 font-mono text-black">
+        <span className="text-black ml-2 font-mono text-black">
           {new Date().toLocaleDateString("en-US", {
             weekday: "long",
             month: "long",
             day: "numeric",
           })}
         </span>
-        <span className="ml-1 font-mono text-white">{time}</span>
+        <span className="ml-1 font-mono text-black">{time}</span>
       </div>
     </div>
   );

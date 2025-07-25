@@ -8,6 +8,10 @@ import ExplorerModal from "@/components/ui/ExplorerModal";
 // Import the Starfield animated background
 import Starfield from "@/components/ui/Starfield";
 import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor hook
+// Import the GridBackground component
+import GridBackground from "@/components/ui/GridBackground";
+// Import the TextModifier component for interactive text effects
+import TextModifier from "@/components/ui/TextModifier";
 
 // Interface for modal state management
 interface ModalState {
@@ -134,14 +138,44 @@ export default function Home() {
     <>
       {/* MacOS-style Menu Bar */}
       <MenuBar />
+
+      {/* Grid Background Layer */}
+      <GridBackground />
+
       <div className="flex flex-col items-center justify-center w-full h-full relative">
         {/* --- Animated Starfield Background Layer --- */}
-        <Starfield />
-        {/* --- Background Image: covers entire viewport, sits behind all content --- */}
-        <div
-          className="portfolio-bg"
-          aria-hidden="true"
-        />
+
+        {/* Centered Portfolio Title with TextModifier Effects */}
+        <div className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+          {/* Welcome text - smaller and positioned above */}
+          <div className="mt-9">
+            <TextModifier
+              text="welcome to my"
+              className="text-4xl font-light tracking-wide"
+              baseWeight={400}
+              maxWeight={900}
+              maxScale={1.3}
+              maxOffset={5}
+              animationSpeed={0.2}
+              proximityRadius={120}
+            />
+          </div>
+
+          {/* Main PORTFOLIO text - larger and more prominent */}
+          <div className="flex items-center justify-center">
+            <TextModifier
+              text="PORTFOLIO."
+              className="text-7xl font-extrabold tracking-wider"
+              baseWeight={400}
+              maxWeight={900}
+              maxScale={1.3}
+              maxOffset={15}
+              animationSpeed={0.2} // Increased for faster animation, as in test2/page.tsx
+              proximityRadius={200}
+            />
+          </div>
+        </div>
+
         {/* Folders and Files (right side) */}
         <div className="absolute right-8 top-24 flex flex-col items-center gap-8 z-10">
           {/* Draggable folders and trash */}
@@ -170,7 +204,7 @@ export default function Home() {
                     className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center z-0 pointer-events-none"
                     style={{ width: 80, height: 80 }}
                   >
-                    <div className="w-20 h-16 bg-white/15 border border-white/30" />
+                    <div className="w-20 h-16 bg-gray-300 border border-gray-400" />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -186,12 +220,12 @@ export default function Home() {
                       exit={{ opacity: 0, scaleX: 0.7 }}
                       transition={{ duration: 0.18 }}
                       className="absolute left-1/2 -translate-x-1/2 top-0 w-full h-full px-1 bg-[#007aff] shadow"
-                      style={{ height: 18, zIndex: 1 }}
+                      style={{ height: 24, zIndex: 1 }}
                     />
                   )}
                 </AnimatePresence>
                 <span
-                  className={`text-xs mt-1 text-center select-none px-1 rounded-sm z-10 text-white drop-shadow-sm`}
+                  className={`text-sm mt-1 text-center select-none px-1 rounded-sm z-10 drop-shadow-sm ${hoveredId === item.id ? 'text-white' : 'text-black'}`}
                   style={{textShadow: hoveredId === item.id ? '0 1px 2px #007aff, 0 0px 8px #0002' : '0 1px 2px #fff, 0 0px 8px #0002', position: 'relative'}}
                 >
                   {item.label}
@@ -201,15 +235,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Center Welcome Message */}
-        {/* Centered absolutely in the viewport, above all other elements */}
-        {/* Small welcome text with blend mode for color inversion and strong text shadow fallback */}
-        <div
-            className="fixed inset-0 flex flex-col items-center justify-center text-3xl text-white drop-shadow mb-60 font-medium font-sans"
-            style={{textShadow: '0 2px 16px #000, 0 1px 0 #fff' , zIndex: 2 }}
-          >
-            welcome to my
-          </div>
 
         {/* Dock (bottom center) */}
         <Dock />
