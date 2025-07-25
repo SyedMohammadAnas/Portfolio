@@ -150,7 +150,7 @@ export default function Home() {
 
         {/* Centered Portfolio Title with TextModifier Effects, lifted up */}
         <div
-          className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none -mt-20"
+          className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none -mt-18"
           // -mt-20 lifts the whole block up; adjust as needed for your design
         >
           {/* Welcome text - smaller and positioned above, also lifted */}
