@@ -149,16 +149,20 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
       if (modalContainerRef.current) {
         const modal = modalContainerRef.current;
         const modalRect = modal.getBoundingClientRect();
+        const modalWidth = modal.offsetWidth;
+        const modalHeight = modal.offsetHeight;
+
         setConstraints({
           left: -modalRect.left,
           top: -modalRect.top,
-          right: window.innerWidth - modalRect.right,
-          bottom: window.innerHeight - modalRect.bottom,
+          right: window.innerWidth - modalRect.left - modalWidth,
+          bottom: window.innerHeight - modalRect.top - modalHeight,
         });
       }
     }
     if (isOpen) {
-      updateConstraints();
+      // Delay constraint calculation to ensure modal is rendered
+      setTimeout(updateConstraints, 100);
       window.addEventListener('resize', updateConstraints);
       return () => window.removeEventListener('resize', updateConstraints);
     }
@@ -221,8 +225,13 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
             exit={{ scale: 0.96, opacity: 0 }}
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
             drag
-            dragConstraints={constraints}
-            dragElastic={0}
+            dragConstraints={{
+              left: -getInitialPosition().x,
+              top: -getInitialPosition().y,
+              right: window.innerWidth - getInitialPosition().x - 620,
+              bottom: window.innerHeight - getInitialPosition().y - 350,
+            }}
+            dragElastic={0.1}
             dragMomentum={false}
             ref={modalContainerRef}
             onClick={e => e.stopPropagation()}
