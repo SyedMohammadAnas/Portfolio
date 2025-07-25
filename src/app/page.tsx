@@ -9,6 +9,14 @@ import ExplorerModal from "@/components/ui/ExplorerModal";
 import Starfield from "@/components/ui/Starfield";
 import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor hook
 
+// Interface for modal state management
+interface ModalState {
+  id: string; // Unique identifier for each modal
+  projectId: number; // Which project this modal represents
+  position: { x: number; y: number }; // Modal position
+  isOpen: boolean; // Whether this modal is open
+  zIndex: number; // For proper stacking
+}
 
 // Main portfolio desktop page for Syed Mohammad Anas
 export default function Home() {
@@ -19,19 +27,77 @@ export default function Home() {
     { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
     { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'trash' },
   ]);
+
   // Track which folder is hovered for custom hover effect
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
-  // State for ExplorerModal
-  const [explorerOpen, setExplorerOpen] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState<number>(1);
+  // State for multiple ExplorerModals - array of modal states
+  const [modals, setModals] = useState<ModalState[]>([]);
+
+  // State for currently selected project in each modal
+  const [selectedProjectIds, setSelectedProjectIds] = useState<{ [modalId: string]: number }>({});
 
   const setCursorType = useCursor(); // Get cursor setter
+
+  // Function to generate random position within viewport bounds
+  const generateRandomPosition = () => {
+    const modalWidth = 620; // ExplorerModal width
+    const modalHeight = 350; // ExplorerModal height
+    const padding = 50; // Minimum distance from edges for better UX
+
+    const maxX = window.innerWidth - modalWidth - padding;
+    const maxY = window.innerHeight - modalHeight - padding;
+    const minX = padding;
+    const minY = padding;
+
+    return {
+      x: Math.floor(Math.random() * (maxX - minX + 1)) + minX,
+      y: Math.floor(Math.random() * (maxY - minY + 1)) + minY
+    };
+  };
+
+  // Function to create a new modal
+  const createModal = (projectId: number) => {
+    const modalId = `modal-${projectId}-${Date.now()}`; // Unique ID
+    const newModal: ModalState = {
+      id: modalId,
+      projectId,
+      position: generateRandomPosition(),
+      isOpen: true,
+      zIndex: 100 + modals.length // Stack modals properly
+    };
+
+    setModals(prev => [...prev, newModal]);
+    setSelectedProjectIds(prev => ({ ...prev, [modalId]: projectId }));
+  };
+
+  // Function to close a specific modal
+  const closeModal = (modalId: string) => {
+    setModals(prev => prev.filter(modal => modal.id !== modalId));
+    setSelectedProjectIds(prev => {
+      const newState = { ...prev };
+      delete newState[modalId];
+      return newState;
+    });
+  };
+
+  // Function to bring modal to front (update z-index)
+  const bringModalToFront = (modalId: string) => {
+    setModals(prev => {
+      const maxZIndex = Math.max(...prev.map(m => m.zIndex));
+      return prev.map(modal =>
+        modal.id === modalId
+          ? { ...modal, zIndex: maxZIndex + 1 }
+          : modal
+      );
+    });
+  };
 
   // Handler for drag start
   const handleDragStart = (id: number) => {
     setItems((prev) => prev.map(item => item.id === id ? { ...item, z: 10 } : { ...item, z: 1 }));
   };
+
   // Handler for drag end
   const handleDragEnd = (
     id: number,
@@ -43,12 +109,25 @@ export default function Home() {
     ));
   };
 
-  // Handler for folder click
+  // Handler for folder click - now supports multiple modals
   const handleFolderClick = (item: typeof items[number]) => {
     if (item.type === 'folder' && item.projectId) {
-      setSelectedProjectId(item.projectId);
-      setExplorerOpen(true);
+      // Check if a modal for this project already exists
+      const existingModal = modals.find(modal => modal.projectId === item.projectId);
+
+      if (existingModal) {
+        // If modal exists, bring it to front
+        bringModalToFront(existingModal.id);
+      } else {
+        // If no modal exists, create a new one
+        createModal(item.projectId);
+      }
     }
+  };
+
+  // Handler for project selection within a modal
+  const handleProjectSelection = (modalId: string, projectId: number) => {
+    setSelectedProjectIds(prev => ({ ...prev, [modalId]: projectId }));
   };
 
   return (
@@ -135,13 +214,18 @@ export default function Home() {
         {/* Dock (bottom center) */}
         <Dock />
 
-        {/* Explorer Modal Integration */}
-        <ExplorerModal
-          isOpen={explorerOpen}
-          onClose={() => setExplorerOpen(false)}
-          selectedProjectId={selectedProjectId}
-          onSelectProject={setSelectedProjectId}
-        />
+        {/* Multiple Explorer Modals - render all open modals */}
+        {modals.map((modal) => (
+          <ExplorerModal
+            key={modal.id}
+            isOpen={modal.isOpen}
+            onClose={() => closeModal(modal.id)}
+            selectedProjectId={selectedProjectIds[modal.id] || modal.projectId}
+            onSelectProject={(projectId) => handleProjectSelection(modal.id, projectId)}
+            initialPosition={modal.position}
+            customZIndex={modal.zIndex}
+          />
+        ))}
       </div>
     </>
   );

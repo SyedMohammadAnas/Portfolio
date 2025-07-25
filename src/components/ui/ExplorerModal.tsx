@@ -82,6 +82,8 @@ interface ExplorerModalProps {
   onSelectProject: (id: number) => void;
   // Optional custom initial position for the modal
   initialPosition?: { x: number; y: number };
+  // Optional custom z-index for modal stacking
+  customZIndex?: number;
 }
 
 /**
@@ -101,6 +103,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
   selectedProjectId,
   onSelectProject,
   initialPosition,
+  customZIndex,
 }) => {
   // Trap focus inside modal when open
   const modalRef = useRef<HTMLDivElement>(null);
@@ -190,18 +193,17 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] pointer-events-auto"
+          className="fixed inset-0 z-[100] pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           tabIndex={-1}
           ref={modalRef}
         >
-          {/* Overlay: covers the whole screen, closes modal on click */}
+          {/* Overlay: covers the whole screen for visual effect */}
           <div
-            className="fixed inset-0 bg-black/10 pointer-events-auto"
+            className="fixed inset-0 bg-black/10 pointer-events-none"
             style={{ zIndex: 100 }}
-            onClick={onClose}
           />
           {/* Draggable modal container positioned at custom location */}
           <motion.div
@@ -212,7 +214,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
               left: getInitialPosition().x,
               top: getInitialPosition().y,
               boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)",
-              zIndex: 101
+              zIndex: customZIndex || 101 // Use custom z-index if provided, otherwise default to 101
             }}
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
