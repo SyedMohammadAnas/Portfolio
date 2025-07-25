@@ -16,6 +16,8 @@ const IMAGES = [
 interface PhotoGalleryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  // Optional custom initial position for the modal
+  initialPosition?: { x: number; y: number };
 }
 
 /**
@@ -24,12 +26,32 @@ interface PhotoGalleryModalProps {
  * - 3D coverflow slider using Framer Motion
  * - Closes on window controls or outside click
  */
-const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }) => {
+const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, initialPosition }) => {
   // Current index in the slider
   const [current, setCurrent] = useState(2);
   const setCursorType = useCursor(); // Get cursor setter
   // State to track if carousel is being dragged
   const [isDragging, setIsDragging] = useState(false);
+
+  // Calculate initial position for the modal
+  const getInitialPosition = (): { x: number; y: number } => {
+    const modalWidth = 700; // Modal width in pixels
+    const modalHeight = 420; // Modal height in pixels
+
+    if (initialPosition) {
+      // Use custom position if provided
+      return {
+        x: Math.max(0, Math.min(initialPosition.x, window.innerWidth - modalWidth)),
+        y: Math.max(0, Math.min(initialPosition.y, window.innerHeight - modalHeight))
+      };
+    }
+
+    // Default to center position
+    return {
+      x: (window.innerWidth - modalWidth) / 2,
+      y: (window.innerHeight - modalHeight) / 2
+    };
+  };
   // State to track if modal is being dragged
   const [isModalDragging, setIsModalDragging] = useState(false);
   // Ref for modal container to calculate drag constraints
@@ -70,7 +92,7 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
+          className="fixed inset-0 z-[100] pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -82,12 +104,16 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
           />
           {/* Modal window */}
           <motion.div
-            className="relative bg-white rounded-xl shadow-2xl w-[700px] max-w-[98vw] h-[420px] max-h-[90vh] flex flex-col items-center overflow-hidden"
+            className="absolute bg-white rounded-xl shadow-2xl w-[700px] max-w-[98vw] h-[420px] max-h-[90vh] flex flex-col items-center overflow-hidden pointer-events-auto"
             initial={{ scale: 0.97, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.97, opacity: 0 }}
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
-            style={{ zIndex: 101 }}
+            style={{
+              zIndex: 101,
+              left: getInitialPosition().x,
+              top: getInitialPosition().y
+            }}
             drag
             dragConstraints={constraints}
             dragElastic={0}

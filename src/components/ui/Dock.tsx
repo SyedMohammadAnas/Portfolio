@@ -41,13 +41,12 @@ const Dock: React.FC = () => {
   const [selectedProjectId, setSelectedProjectId] = useState(1);
   const [stickyNoteOpen, setStickyNoteOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
-  // State for random modal position
+  // State for random modal positions
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
+  const [galleryPosition, setGalleryPosition] = useState({ x: 0, y: 0 });
 
   // Function to generate random position within viewport bounds
-  const generateRandomPosition = () => {
-    const modalWidth = 620; // ExplorerModal width
-    const modalHeight = 350; // ExplorerModal height
+  const generateRandomPosition = (modalWidth: number, modalHeight: number) => {
     const padding = 50; // Minimum distance from edges for better UX
 
     const maxX = window.innerWidth - modalWidth - padding;
@@ -66,8 +65,14 @@ const Dock: React.FC = () => {
 
   // Handler to open explorer modal with random position
   const handleOpenExplorer = () => {
-    setModalPosition(generateRandomPosition());
+    setModalPosition(generateRandomPosition(620, 350)); // ExplorerModal dimensions
     setExplorerModalOpen(true);
+  };
+
+  // Handler to open photo gallery modal with random position
+  const handleOpenGallery = () => {
+    setGalleryPosition(generateRandomPosition(700, 420)); // PhotoGalleryModal dimensions
+    setGalleryOpen(true);
   };
 
   return (
@@ -85,7 +90,11 @@ const Dock: React.FC = () => {
         <StickyNote onClose={() => setStickyNoteOpen(false)} />
       )}
       {/* Render PhotoGalleryModal if open */}
-      <PhotoGalleryModal isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
+      <PhotoGalleryModal
+        isOpen={galleryOpen}
+        onClose={() => setGalleryOpen(false)}
+        initialPosition={galleryPosition}
+      />
       <div
         className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-8"
         style={{ minWidth: 340, maxWidth: '96vw' }}
@@ -140,7 +149,7 @@ const Dock: React.FC = () => {
                         : isNotes
                         ? () => setStickyNoteOpen(true)
                         : isPhotos
-                        ? () => setGalleryOpen(true)
+                        ? () => handleOpenGallery()
                         : isGitHub
                         ? () => window.open("https://github.com/SyedMohammadAnas", "_blank")
                         : undefined
