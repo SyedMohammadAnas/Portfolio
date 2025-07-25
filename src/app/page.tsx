@@ -30,6 +30,8 @@ export default function Home() {
     { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder', projectId: 1 },
     { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
     { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'trash' },
+    { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
+    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: -60, z: 1, type: 'folder' },
   ]);
 
   // Track which folder is hovered for custom hover effect
@@ -142,12 +144,16 @@ export default function Home() {
       {/* Grid Background Layer */}
       <GridBackground />
 
+
       <div className="flex flex-col items-center justify-center w-full h-full relative">
         {/* --- Animated Starfield Background Layer --- */}
 
-        {/* Centered Portfolio Title with TextModifier Effects */}
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-          {/* Welcome text - smaller and positioned above */}
+        {/* Centered Portfolio Title with TextModifier Effects, lifted up */}
+        <div
+          className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none -mt-20"
+          // -mt-20 lifts the whole block up; adjust as needed for your design
+        >
+          {/* Welcome text - smaller and positioned above, also lifted */}
           <div className="mt-9">
             <TextModifier
               text="welcome to my"
@@ -157,11 +163,11 @@ export default function Home() {
               maxScale={1.3}
               maxOffset={5}
               animationSpeed={0.2}
-              proximityRadius={120}
+              proximityRadius={100}
             />
           </div>
 
-          {/* Main PORTFOLIO text - larger and more prominent */}
+          {/* Main PORTFOLIO text - larger and more prominent, also lifted */}
           <div className="flex items-center justify-center">
             <TextModifier
               text="PORTFOLIO."
@@ -171,7 +177,7 @@ export default function Home() {
               maxScale={1.3}
               maxOffset={15}
               animationSpeed={0.2} // Increased for faster animation, as in test2/page.tsx
-              proximityRadius={200}
+              proximityRadius={150}
             />
           </div>
         </div>

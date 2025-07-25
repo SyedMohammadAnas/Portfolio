@@ -14,7 +14,7 @@ const dockIcons = [
   { src: "/media/Icons/appleMusic.avif", alt: "Music" },
   { src: "/media/Icons/appleMessages.avif", alt: "Messages" },
   { src: "/media/Icons/appleNotes.avif", alt: "Notes" },
-  { src: "/media/Icons/githubLogo.avif", alt: "GitHub" },
+  { src: "/media/IconsPNG/githubLogo2.png", alt: "GitHub" },
   { src: "/media/Icons/appleCalendar.avif", alt: "Calendar" },
   { src: "/media/Icons/applePhotos.avif", alt: "Photos" },
   { src: "/media/Icons/appleContacts.avif", alt: "Contacts" },

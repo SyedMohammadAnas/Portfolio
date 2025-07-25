@@ -101,10 +101,15 @@ export default function TextModifier({
   const isAnimatingRef = useRef(false);
 
   /**
-   * Set mounted state after component mounts on client
+   * Set mounted state after component mounts on client with delay to prevent hydration mismatch
    */
   useEffect(() => {
-    setIsMounted(true);
+    // Add a small delay to ensure hydration is complete before switching to interactive mode
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 100); // 100ms delay to allow hydration to complete
+
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -257,8 +262,11 @@ export default function TextModifier({
    * Memoize the letters array to prevent unnecessary re-renders
    */
   const letters = useMemo(() => {
-    if (!isMounted) {
-      // Return static version for SSR
+    // Always render static version initially to prevent hydration mismatch
+    const shouldRenderStatic = !isMounted;
+
+    if (shouldRenderStatic) {
+      // Return static version for SSR and initial client render
       return text.split('').map((letter, index) => (
         <span
           key={index}
@@ -275,6 +283,7 @@ export default function TextModifier({
       ));
     }
 
+    // Interactive version after hydration is complete
     return text.split('').map((letter, index) => {
       return (
         <span
