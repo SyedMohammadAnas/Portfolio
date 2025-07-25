@@ -14,7 +14,7 @@ const dockIcons = [
   { src: "/media/Icons/appleMusic.avif", alt: "Music" },
   { src: "/media/Icons/appleMessages.avif", alt: "Messages" },
   { src: "/media/Icons/appleNotes.avif", alt: "Notes" },
-  { src: "/media/Icons/appleReminders.avif", alt: "Reminders" },
+  { src: "/media/Icons/githubLogo.avif", alt: "GitHub" },
   { src: "/media/Icons/appleCalendar.avif", alt: "Calendar" },
   { src: "/media/Icons/applePhotos.avif", alt: "Photos" },
   { src: "/media/Icons/appleContacts.avif", alt: "Contacts" },
@@ -82,15 +82,7 @@ const Dock: React.FC = () => {
       />
       {/* Render StickyNote if open */}
       {stickyNoteOpen && (
-        <>
-          {/* Overlay to close sticky note on outside click */}
-          <div
-            className="fixed inset-0 z-20 bg-transparent cursor-pointer"
-            onClick={() => setStickyNoteOpen(false)}
-            aria-label="Close sticky note by clicking outside"
-          />
-          <StickyNote onClose={() => setStickyNoteOpen(false)} />
-        </>
+        <StickyNote onClose={() => setStickyNoteOpen(false)} />
       )}
       {/* Render PhotoGalleryModal if open */}
       <PhotoGalleryModal isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
@@ -116,6 +108,8 @@ const Dock: React.FC = () => {
             const isNotes = icon.alt === "Notes";
             // Check if this is the Photos icon
             const isPhotos = icon.alt === "Photos";
+            // Check if this is the GitHub icon
+            const isGitHub = icon.alt === "GitHub";
             return (
               <React.Fragment key={icon.alt}>
                 {showDivider && (
@@ -147,6 +141,8 @@ const Dock: React.FC = () => {
                         ? () => setStickyNoteOpen(true)
                         : isPhotos
                         ? () => setGalleryOpen(true)
+                        : isGitHub
+                        ? () => window.open("https://github.com/SyedMohammadAnas", "_blank")
                         : undefined
                     }
                     // Set custom cursor on hover

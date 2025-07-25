@@ -91,10 +91,10 @@ const StickyNote: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <div className="p-4">
           <div className="font-bold text-base mb-2">To do:</div>
           <ul className="text-sm space-y-1">
-            <li>Land my dream UX job</li>
-            <li>Drink water</li>
-            <li className="line-through">Move to the US</li>
-            <li>Finish grad school without losing my mind</li>
+            <li>Land my dream job</li>
+            <li className="line-through">Drink water</li>
+            <li>Move to the US</li>
+            <li>Finish uni without losing my mind</li>
             <li>Build that banger spotify playlist</li>
             <li>World domination</li>
             <li className="line-through">Get really good at making pasta</li>

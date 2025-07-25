@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useCursor } from "./useCursor"; // Import custom cursor hook
@@ -30,9 +30,36 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
   const setCursorType = useCursor(); // Get cursor setter
   // State to track if carousel is being dragged
   const [isDragging, setIsDragging] = useState(false);
+  // State to track if modal is being dragged
+  const [isModalDragging, setIsModalDragging] = useState(false);
+  // Ref for modal container to calculate drag constraints
+  const modalContainerRef = useRef<HTMLDivElement>(null);
+  // State for drag constraints
+  const [constraints, setConstraints] = useState({ left: 0, right: 0, top: 0, bottom: 0 });
+
+  // Update drag constraints on mount and resize
+  useEffect(() => {
+    function updateConstraints() {
+      if (modalContainerRef.current) {
+        const modal = modalContainerRef.current;
+        const modalRect = modal.getBoundingClientRect();
+        setConstraints({
+          left: -modalRect.left,
+          top: -modalRect.top,
+          right: window.innerWidth - modalRect.right,
+          bottom: window.innerHeight - modalRect.bottom,
+        });
+      }
+    }
+    if (isOpen) {
+      updateConstraints();
+      window.addEventListener('resize', updateConstraints);
+      return () => window.removeEventListener('resize', updateConstraints);
+    }
+  }, [isOpen]);
 
   // Prevent background scroll when modal is open
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
       return () => { document.body.style.overflow = ""; };
@@ -48,11 +75,10 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Overlay: closes modal on click */}
+          {/* Overlay: covers the whole screen for visual effect */}
           <div
-            className="fixed inset-0 bg-black/10 cursor-pointer"
+            className="fixed inset-0 bg-black/10 pointer-events-none"
             style={{ zIndex: 100 }}
-            onClick={onClose}
           />
           {/* Modal window */}
           <motion.div
@@ -62,7 +88,17 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
             exit={{ scale: 0.97, opacity: 0 }}
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
             style={{ zIndex: 101 }}
+            drag
+            dragConstraints={constraints}
+            dragElastic={0}
+            dragMomentum={false}
+            ref={modalContainerRef}
             onClick={e => e.stopPropagation()}
+            // Cursor logic for drag
+            onMouseEnter={() => !isModalDragging && setCursorType("openhand")}
+            onMouseLeave={() => { setCursorType("normal"); setIsModalDragging(false); }}
+            onDragStart={() => { setCursorType("closedhand"); setIsModalDragging(true); }}
+            onDragEnd={() => { setCursorType("openhand"); setIsModalDragging(false); }}
           >
             {/* MacOS-style title bar */}
             <div className="flex items-center h-8 px-4 border-b border-gray-200 bg-gray-50 relative select-none w-full">
@@ -120,10 +156,15 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose }
                 // Prevent text/image selection while dragging
                 dragElastic={0.18}
                 dragMomentum={false}
-                // Cursor logic for drag
-                onMouseEnter={() => !isDragging && setCursorType("openhand")}
+                // Cursor logic for drag - only when not dragging modal
+                onMouseEnter={() => !isDragging && !isModalDragging && setCursorType("openhand")}
                 onMouseLeave={() => { setCursorType("normal"); setIsDragging(false); }}
-                onDragStart={() => { setCursorType("closedhand"); setIsDragging(true); }}
+                onDragStart={() => {
+                  if (!isModalDragging) {
+                    setCursorType("closedhand");
+                    setIsDragging(true);
+                  }
+                }}
               >
                 {IMAGES.map((src, idx) => {
                   // Calculate position relative to current
