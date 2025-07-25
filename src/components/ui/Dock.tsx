@@ -41,35 +41,34 @@ const Dock: React.FC = () => {
   const [selectedProjectId, setSelectedProjectId] = useState(1);
   const [stickyNoteOpen, setStickyNoteOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
-  // State to store the random position for ExplorerModal
-  const [explorerModalPosition, setExplorerModalPosition] = useState<{ x: number; y: number } | undefined>(undefined);
+  // State for random modal position
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
 
   // Function to generate random position within viewport bounds
-  const generateRandomPosition = (): { x: number; y: number } => {
+  const generateRandomPosition = () => {
     const modalWidth = 620; // ExplorerModal width
     const modalHeight = 350; // ExplorerModal height
+    const padding = 50; // Minimum distance from edges for better UX
 
-    // Calculate safe bounds (ensure modal stays within viewport)
-    const maxX = window.innerWidth - modalWidth;
-    const maxY = window.innerHeight - modalHeight;
+    const maxX = window.innerWidth - modalWidth - padding;
+    const maxY = window.innerHeight - modalHeight - padding;
+    const minX = padding;
+    const minY = padding;
 
-    // Generate random coordinates with some padding from edges
-    const padding = 50; // Minimum distance from viewport edges
-    const x = Math.max(padding, Math.random() * (maxX - padding));
-    const y = Math.max(padding, Math.random() * (maxY - padding));
-
-    return { x, y };
-  };
-
-  // Handler to open ExplorerModal with random position
-  const handleOpenExplorerModal = () => {
-    const randomPosition = generateRandomPosition();
-    setExplorerModalPosition(randomPosition);
-    setExplorerModalOpen(true);
+    return {
+      x: Math.floor(Math.random() * (maxX - minX + 1)) + minX,
+      y: Math.floor(Math.random() * (maxY - minY + 1)) + minY
+    };
   };
 
   // Handler to change selected project
   const handleSelectProject = (id: number) => setSelectedProjectId(id);
+
+  // Handler to open explorer modal with random position
+  const handleOpenExplorer = () => {
+    setModalPosition(generateRandomPosition());
+    setExplorerModalOpen(true);
+  };
 
   return (
     <>
@@ -79,6 +78,7 @@ const Dock: React.FC = () => {
         onClose={() => setExplorerModalOpen(false)}
         selectedProjectId={selectedProjectId}
         onSelectProject={handleSelectProject}
+        initialPosition={modalPosition}
       />
       {/* Render StickyNote if open */}
       {stickyNoteOpen && (
@@ -142,7 +142,7 @@ const Dock: React.FC = () => {
                     style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
                     onClick={
                       isFinder
-                        ? () => handleOpenExplorerModal()
+                        ? () => handleOpenExplorer()
                         : isNotes
                         ? () => setStickyNoteOpen(true)
                         : isPhotos
