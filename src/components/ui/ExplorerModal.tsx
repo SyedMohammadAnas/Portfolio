@@ -80,6 +80,8 @@ interface ExplorerModalProps {
   onClose: () => void;
   selectedProjectId: number;
   onSelectProject: (id: number) => void;
+  // Optional custom initial position for the modal
+  initialPosition?: { x: number; y: number };
 }
 
 /**
@@ -91,12 +93,14 @@ interface ExplorerModalProps {
  * - Main area is solid white, with centered grid of files/folders
  * - Modal is smaller and draggable
  * - No background blur/overlay
+ * - Supports custom initial positioning
  */
 const ExplorerModal: React.FC<ExplorerModalProps> = ({
   isOpen,
   onClose,
   selectedProjectId,
   onSelectProject,
+  initialPosition,
 }) => {
   // Trap focus inside modal when open
   const modalRef = useRef<HTMLDivElement>(null);
@@ -115,6 +119,26 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
   const setCursorType = useCursor(); // Get cursor setter
   // State to track if modal is being dragged
   const [isDragging, setIsDragging] = React.useState(false);
+
+  // Calculate initial position for the modal
+  const getInitialPosition = (): { x: number; y: number } => {
+    const modalWidth = 620; // Modal width in pixels
+    const modalHeight = 350; // Modal height in pixels
+
+    if (initialPosition) {
+      // Use custom position if provided
+      return {
+        x: Math.max(0, Math.min(initialPosition.x, window.innerWidth - modalWidth)),
+        y: Math.max(0, Math.min(initialPosition.y, window.innerHeight - modalHeight))
+      };
+    }
+
+    // Default to center position
+    return {
+      x: (window.innerWidth - modalWidth) / 2,
+      y: (window.innerHeight - modalHeight) / 2
+    };
+  };
 
   // Update drag constraints on mount and resize
   useEffect(() => {
@@ -166,7 +190,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-auto"
+          className="fixed inset-0 z-[100] pointer-events-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -179,9 +203,17 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
             style={{ zIndex: 100 }}
             onClick={onClose}
           />
-          {/* Draggable modal container (smaller, no overlay) */}
+          {/* Draggable modal container positioned at custom location */}
           <motion.div
-            className="relative flex w-[620px] h-[350px] rounded-lg shadow-2xl overflow-hidden border border-white/30 bg-white pointer-events-auto"
+            className="absolute rounded-lg shadow-2xl overflow-hidden border border-white/30 bg-white pointer-events-auto"
+            style={{
+              width: '620px',
+              height: '350px',
+              left: getInitialPosition().x,
+              top: getInitialPosition().y,
+              boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)",
+              zIndex: 101
+            }}
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.96, opacity: 0 }}
@@ -190,7 +222,6 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
             dragConstraints={constraints}
             dragElastic={0}
             dragMomentum={false}
-            style={{ boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)", zIndex: 101 }}
             ref={modalContainerRef}
             onClick={e => e.stopPropagation()}
             // Cursor logic for drag

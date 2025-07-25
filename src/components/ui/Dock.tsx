@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCursor } from "./useCursor"; // Import custom cursor hook
@@ -41,6 +41,32 @@ const Dock: React.FC = () => {
   const [selectedProjectId, setSelectedProjectId] = useState(1);
   const [stickyNoteOpen, setStickyNoteOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  // State to store the random position for ExplorerModal
+  const [explorerModalPosition, setExplorerModalPosition] = useState<{ x: number; y: number } | undefined>(undefined);
+
+  // Function to generate random position within viewport bounds
+  const generateRandomPosition = (): { x: number; y: number } => {
+    const modalWidth = 620; // ExplorerModal width
+    const modalHeight = 350; // ExplorerModal height
+
+    // Calculate safe bounds (ensure modal stays within viewport)
+    const maxX = window.innerWidth - modalWidth;
+    const maxY = window.innerHeight - modalHeight;
+
+    // Generate random coordinates with some padding from edges
+    const padding = 50; // Minimum distance from viewport edges
+    const x = Math.max(padding, Math.random() * (maxX - padding));
+    const y = Math.max(padding, Math.random() * (maxY - padding));
+
+    return { x, y };
+  };
+
+  // Handler to open ExplorerModal with random position
+  const handleOpenExplorerModal = () => {
+    const randomPosition = generateRandomPosition();
+    setExplorerModalPosition(randomPosition);
+    setExplorerModalOpen(true);
+  };
 
   // Handler to change selected project
   const handleSelectProject = (id: number) => setSelectedProjectId(id);
@@ -116,7 +142,7 @@ const Dock: React.FC = () => {
                     style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
                     onClick={
                       isFinder
-                        ? () => setExplorerModalOpen(true)
+                        ? () => handleOpenExplorerModal()
                         : isNotes
                         ? () => setStickyNoteOpen(true)
                         : isPhotos
