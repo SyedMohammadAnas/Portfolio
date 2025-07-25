@@ -110,7 +110,6 @@ export default function TextModifier({
     }, 100); // 100ms delay to allow hydration to complete
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -206,7 +205,7 @@ export default function TextModifier({
         const targetY = lerp(0, maxOffset * (cursorPosRef.current.y > letterCenterY ? 1 : -1), magnification);
 
         // Adjust animation speed based on cursor movement
-        let currentAnimationSpeed = isCursorMovingRef.current ? animationSpeed : animationSpeed * 0.2;
+        const currentAnimationSpeed = isCursorMovingRef.current ? animationSpeed : animationSpeed * 0.2;
 
         // Smoothly interpolate current values to targets
         const newCurrentWeight = lerp(state.currentWeight, targetWeight, currentAnimationSpeed);
