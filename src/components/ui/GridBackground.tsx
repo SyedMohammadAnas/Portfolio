@@ -15,8 +15,8 @@ const GridBackground: React.FC = () => {
       className="fixed inset-0 pointer-events-none z-[-1]"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(200, 200, 200, 0.5) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(200, 200, 200, 0.5) 1px, transparent 1px)
+          linear-gradient(rgba(200, 200, 200, 1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(200, 200, 200, 1) 1px, transparent 1px)
         `,
         backgroundSize: '35px 35px',
         backgroundPosition: '0 0'

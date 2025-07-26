@@ -6,6 +6,8 @@ import { useCursor } from "./useCursor"; // Import custom cursor hook
 import ExplorerModal from "./ExplorerModal";
 import StickyNote from "./StickyNote";
 import PhotoGalleryModal from "./PhotoGalleryModal";
+// Import the new SpotifyEmbed component
+import SpotifyEmbed from "./SpotifyEmbed";
 
 // ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
@@ -41,6 +43,8 @@ const Dock: React.FC = () => {
   const [selectedProjectId, setSelectedProjectId] = useState(1);
   const [stickyNoteOpen, setStickyNoteOpen] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  // State for Spotify embed visibility
+  const [spotifyEmbedOpen, setSpotifyEmbedOpen] = useState(false);
   // State for random modal positions
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [galleryPosition, setGalleryPosition] = useState({ x: 0, y: 0 });
@@ -65,14 +69,22 @@ const Dock: React.FC = () => {
 
   // Handler to open explorer modal with random position
   const handleOpenExplorer = () => {
-    setModalPosition(generateRandomPosition(620, 350)); // ExplorerModal dimensions
-    setExplorerModalOpen(true);
+    // Only open if not already open
+    if (!explorerModalOpen) {
+      setModalPosition(generateRandomPosition(620, 350)); // ExplorerModal dimensions
+      setExplorerModalOpen(true);
+    }
   };
 
   // Handler to open photo gallery modal with random position
   const handleOpenGallery = () => {
     setGalleryPosition(generateRandomPosition(700, 420)); // PhotoGalleryModal dimensions
     setGalleryOpen(true);
+  };
+
+  // Handler to toggle Spotify embed
+  const handleToggleSpotify = () => {
+    setSpotifyEmbedOpen(!spotifyEmbedOpen);
   };
 
   return (
@@ -95,6 +107,13 @@ const Dock: React.FC = () => {
         onClose={() => setGalleryOpen(false)}
         initialPosition={galleryPosition}
       />
+
+      {/* Render SpotifyEmbed component */}
+      <SpotifyEmbed
+        isOpen={spotifyEmbedOpen}
+        onClose={() => setSpotifyEmbedOpen(false)}
+      />
+
       <div
         className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-8"
         style={{ minWidth: 340, maxWidth: '96vw' }}
@@ -119,6 +138,14 @@ const Dock: React.FC = () => {
             const isPhotos = icon.alt === "Photos";
             // Check if this is the GitHub icon
             const isGitHub = icon.alt === "GitHub";
+            // Check if this is the Music icon
+            const isMusic = icon.alt === "Music";
+            // Determine if the white dot should be shown for this icon
+            const showWhiteDot =
+              (isFinder && explorerModalOpen) ||
+              (isNotes && stickyNoteOpen) ||
+              (isPhotos && galleryOpen) ||
+              (isMusic && spotifyEmbedOpen);
             return (
               <React.Fragment key={icon.alt}>
                 {showDivider && (
@@ -152,6 +179,8 @@ const Dock: React.FC = () => {
                         ? () => handleOpenGallery()
                         : isGitHub
                         ? () => window.open("https://github.com/SyedMohammadAnas", "_blank")
+                        : isMusic
+                        ? () => handleToggleSpotify()
                         : undefined
                     }
                     // Set custom cursor on hover
@@ -174,6 +203,14 @@ const Dock: React.FC = () => {
                       />
                     </div>
                   </motion.div>
+                  {/* White dot indicator for open modal (Finder, Notes, Photos, Music/Spotify) */}
+                  {showWhiteDot && (
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2 -bottom-2 mb-1 w-1.5 h-1.5 rounded-full bg-white shadow"
+                      style={{ zIndex: 11 }}
+                      aria-label="Open indicator"
+                    />
+                  )}
                 </div>
               </React.Fragment>
             );

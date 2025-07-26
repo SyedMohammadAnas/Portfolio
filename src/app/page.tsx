@@ -6,7 +6,6 @@ import Dock from "@/components/ui/Dock";
 import Image from "next/image";
 import ExplorerModal from "@/components/ui/ExplorerModal";
 // Import the Starfield animated background
-import Starfield from "@/components/ui/Starfield";
 import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor hook
 // Import the GridBackground component
 import GridBackground from "@/components/ui/GridBackground";
@@ -31,7 +30,7 @@ export default function Home() {
     { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
     { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'trash' },
     { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
-    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: -60, z: 1, type: 'folder' },
+    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1500, y: -60, z: 1, type: 'folder' },
   ]);
 
   // Track which folder is hovered for custom hover effect
@@ -141,7 +140,10 @@ export default function Home() {
       {/* MacOS-style Menu Bar */}
       <MenuBar />
 
-      {/* Grid Background Layer */}
+      {/* Beige background for the entire screen */}
+      <div className="fixed inset-0 w-full h-full bg-[#EDE8D0] -z-20" aria-hidden="true" />
+
+      {/* Grid Background Layer (on top of beige background) */}
       <GridBackground />
 
 
