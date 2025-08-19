@@ -8,6 +8,8 @@ import StickyNote from "./StickyNote";
 import PhotoGalleryModal from "./PhotoGalleryModal";
 // Import the new SpotifyEmbed component
 import SpotifyEmbed from "./SpotifyEmbed";
+// Import the new VisitingCardModal component
+import VisitingCardModal from "./VisitingCardModal";
 
 // ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
@@ -45,6 +47,8 @@ const Dock: React.FC = () => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   // State for Spotify embed visibility
   const [spotifyEmbedOpen, setSpotifyEmbedOpen] = useState(false);
+  // State for visiting card modal visibility
+  const [visitingCardOpen, setVisitingCardOpen] = useState(false);
   // State for random modal positions
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [galleryPosition, setGalleryPosition] = useState({ x: 0, y: 0 });
@@ -87,6 +91,11 @@ const Dock: React.FC = () => {
     setSpotifyEmbedOpen(!spotifyEmbedOpen);
   };
 
+  // Handler to toggle visiting card modal
+  const handleToggleVisitingCard = () => {
+    setVisitingCardOpen(!visitingCardOpen);
+  };
+
   return (
     <>
       {/* Render ExplorerModal if open, pass all required props */}
@@ -112,6 +121,12 @@ const Dock: React.FC = () => {
       <SpotifyEmbed
         isOpen={spotifyEmbedOpen}
         onClose={() => setSpotifyEmbedOpen(false)}
+      />
+
+      {/* Render VisitingCardModal component */}
+      <VisitingCardModal
+        isOpen={visitingCardOpen}
+        onClose={() => setVisitingCardOpen(false)}
       />
 
       <div
@@ -140,12 +155,15 @@ const Dock: React.FC = () => {
             const isGitHub = icon.alt === "GitHub";
             // Check if this is the Music icon
             const isMusic = icon.alt === "Music";
+            // Check if this is the Contacts icon
+            const isContacts = icon.alt === "Contacts";
             // Determine if the white dot should be shown for this icon
             const showWhiteDot =
               (isFinder && explorerModalOpen) ||
               (isNotes && stickyNoteOpen) ||
               (isPhotos && galleryOpen) ||
-              (isMusic && spotifyEmbedOpen);
+              (isMusic && spotifyEmbedOpen) ||
+              (isContacts && visitingCardOpen);
             return (
               <React.Fragment key={icon.alt}>
                 {showDivider && (
@@ -181,6 +199,8 @@ const Dock: React.FC = () => {
                         ? () => window.open("https://github.com/SyedMohammadAnas", "_blank")
                         : isMusic
                         ? () => handleToggleSpotify()
+                        : isContacts
+                        ? () => handleToggleVisitingCard()
                         : undefined
                     }
                     // Set custom cursor on hover
@@ -203,7 +223,7 @@ const Dock: React.FC = () => {
                       />
                     </div>
                   </motion.div>
-                  {/* White dot indicator for open modal (Finder, Notes, Photos, Music/Spotify) */}
+                  {/* White dot indicator for open modal (Finder, Notes, Photos, Music/Spotify, Contacts) */}
                   {showWhiteDot && (
                     <div
                       className="absolute left-1/2 -translate-x-1/2 -bottom-2 mb-1 w-1.5 h-1.5 rounded-full bg-white shadow"

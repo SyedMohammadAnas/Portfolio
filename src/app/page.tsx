@@ -29,6 +29,7 @@ export default function Home() {
     { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder', projectId: 1 },
     { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
     { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'trash' },
+    // PDF file that opens resume in new tab when clicked
     { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
     { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1500, y: -60, z: 1, type: 'folder' },
   ]);
@@ -41,6 +42,9 @@ export default function Home() {
 
   // State for currently selected project in each modal
   const [selectedProjectIds, setSelectedProjectIds] = useState<{ [modalId: string]: number }>({});
+
+  // Track which items are currently being dragged to prevent click events
+  const [draggedItems, setDraggedItems] = useState<Set<number>>(new Set());
 
   const setCursorType = useCursor(); // Get cursor setter
 
@@ -98,12 +102,13 @@ export default function Home() {
     });
   };
 
-  // Handler for drag start
+  // Handler for drag start - mark item as being dragged
   const handleDragStart = (id: number) => {
+    setDraggedItems(prev => new Set(prev).add(id)); // Add item to dragged set
     setItems((prev) => prev.map(item => item.id === id ? { ...item, z: 10 } : { ...item, z: 1 }));
   };
 
-  // Handler for drag end
+  // Handler for drag end - remove item from dragged set after a small delay
   const handleDragEnd = (
     id: number,
     event: MouseEvent | TouchEvent | PointerEvent,
@@ -112,10 +117,24 @@ export default function Home() {
     setItems((prev) => prev.map(item =>
       item.id === id ? { ...item, x: item.x + info.offset.x, y: item.y + info.offset.y, z: 1 } : item
     ));
+
+    // Remove item from dragged set after a small delay to prevent immediate clicks
+    setTimeout(() => {
+      setDraggedItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    }, 100); // 100ms delay to prevent accidental clicks after drag
   };
 
-  // Handler for folder click - now supports multiple modals
+  // Handler for folder click - now supports multiple modals and PDF files
   const handleFolderClick = (item: typeof items[number]) => {
+    // Prevent click if item is currently being dragged
+    if (draggedItems.has(item.id)) {
+      return;
+    }
+
     if (item.type === 'folder' && item.projectId) {
       // Check if a modal for this project already exists
       const existingModal = modals.find(modal => modal.projectId === item.projectId);
@@ -127,6 +146,10 @@ export default function Home() {
         // If no modal exists, create a new one
         createModal(item.projectId);
       }
+    } else if (item.type === 'file' && item.label === "SyedResume.pdf") {
+      // Open the PDF file in a new tab
+      const pdfUrl = "https://docs.google.com/document/d/13hupz9yVdmgTIzqTdMkv8YybdTJGkZnJ/edit?usp=sharing&ouid=101811674702433936195&rtpof=true&sd=true";
+      window.open(pdfUrl, '_blank');
     }
   };
 
@@ -156,10 +179,10 @@ export default function Home() {
           // -mt-20 lifts the whole block up; adjust as needed for your design
         >
           {/* Welcome text - smaller and positioned above, also lifted */}
-          <div className="mt-9">
+          <div className="mt-17">
             <TextModifier
               text="welcome to my"
-              className="text-4xl font-light tracking-wide"
+              className="text-5xl font-light tracking-wide"
               baseWeight={400}
               maxWeight={900}
               maxScale={1.3}
@@ -173,7 +196,7 @@ export default function Home() {
           <div className="flex items-center justify-center">
             <TextModifier
               text="PORTFOLIO."
-              className="text-7xl font-extrabold tracking-wider"
+              className="text-8xl font-extrabold tracking-wider"
               baseWeight={400}
               maxWeight={900}
               maxScale={1.3}
