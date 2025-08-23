@@ -11,6 +11,8 @@ import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor h
 import GridBackground from "@/components/ui/GridBackground";
 // Import the TextModifier component for interactive text effects
 import TextModifier from "@/components/ui/TextModifier";
+// Import responsive positioning hook
+import { useResponsivePositioning, pxToVw, pxToVh } from "@/components/ui/useResponsivePositioning";
 
 // Interface for modal state management
 interface ModalState {
@@ -23,8 +25,12 @@ interface ModalState {
 
 // Main portfolio desktop page for Syed Mohammad Anas
 export default function Home() {
+  // Get responsive positioning values
+  const { scale } = useResponsivePositioning();
+
   // State for folder/trash positions and z-index
-  const [items, setItems] = useState([
+  // Reference positions for 1920x1080 resolution - wrapped in useMemo to prevent recreation
+  const referenceItems = React.useMemo(() => [
     { id: 1, label: "Project 02 (Simplingo)", icon: "/media/Icons/appleFolder.avif", x: -350, y: 0, z: 1, type: 'folder', projectId: 2 },
     { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder', projectId: 1 },
     { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
@@ -32,10 +38,28 @@ export default function Home() {
     // PDF file that opens resume in new tab when clicked
     { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
     { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1500, y: -60, z: 1, type: 'folder' },
-  ]);
+  ], []);
+
+  // Apply scaling to items based on current viewport
+  const [items, setItems] = useState(() =>
+    referenceItems.map(item => ({
+      ...item,
+      x: item.x * scale,
+      y: item.y * scale,
+    }))
+  );
 
   // Track which folder is hovered for custom hover effect
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  // Update items when scale changes (viewport resize)
+  React.useEffect(() => {
+    setItems(referenceItems.map(item => ({
+      ...item,
+      x: item.x * scale,
+      y: item.y * scale,
+    })));
+  }, [scale, referenceItems]);
 
   // State for multiple ExplorerModals - array of modal states
   const [modals, setModals] = useState<ModalState[]>([]);
@@ -175,11 +199,13 @@ export default function Home() {
 
         {/* Centered Portfolio Title with TextModifier Effects, lifted up */}
         <div
-          className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none -mt-18"
-          // -mt-20 lifts the whole block up; adjust as needed for your design
+          className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
+          style={{
+            marginTop: pxToVh(-72), // Convert -mt-18 (72px) to viewport height units
+          }}
         >
           {/* Welcome text - smaller and positioned above, also lifted */}
-          <div className="mt-17">
+          <div style={{ marginTop: pxToVh(68) }}> {/* Convert mt-17 (68px) to viewport height units */}
             <TextModifier
               text="welcome to my"
               className="text-5xl font-light tracking-wide"
@@ -207,20 +233,33 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Folders and Files (right side) */}
-        <div className="absolute right-8 top-24 flex flex-col items-center gap-8 z-10">
+                {/* Folders and Files (right side) */}
+        <div
+          className="absolute flex flex-col items-center z-10"
+          style={{
+            right: pxToVw(32), // Convert right-8 (32px) to viewport width units
+            top: pxToVh(96),   // Convert top-24 (96px) to viewport height units
+            gap: pxToVh(32),   // Convert gap-8 (32px) to viewport height units
+          }}
+        >
           {/* Draggable folders and trash */}
           {items.map((item) => (
             <motion.div
               key={item.id}
               drag
               dragMomentum={false}
-              style={{ x: item.x, y: item.y, zIndex: item.z, position: 'relative' }}
+              style={{
+                x: item.x,
+                y: item.y,
+                zIndex: item.z,
+                position: 'relative',
+                marginBottom: pxToVh(16), // Convert mb-4 (16px) to viewport height units
+              }}
               onDragStart={() => handleDragStart(item.id)}
               onDragEnd={(event, info) => handleDragEnd(item.id, event, info)}
               onMouseEnter={() => { setHoveredId(item.id); setCursorType("pointinghand"); }}
               onMouseLeave={() => { setHoveredId(null); setCursorType("normal"); }}
-              className="mb-4 flex flex-col items-center select-none"
+              className="flex flex-col items-center select-none"
               onClick={() => handleFolderClick(item)}
             >
               {/* All items (folders and trash) rendered the same way */}
@@ -233,35 +272,63 @@ export default function Home() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.18 }}
                     className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center z-0 pointer-events-none"
-                    style={{ width: 80, height: 80 }}
+                    style={{
+                      width: pxToVw(80),
+                      height: pxToVh(80)
+                    }}
                   >
-                    <div className="w-20 h-16 bg-gray-300 border border-gray-400" />
+                    <div
+                      className="bg-gray-300 border border-gray-400"
+                      style={{
+                        width: pxToVw(80), // Convert w-20 (80px) to viewport width units
+                        height: pxToVh(64), // Convert h-16 (64px) to viewport height units
+                      }}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
               {/* Folder/trash icon */}
-              <Image src={item.icon} alt={item.label} width={64} height={56} className="w-16 h-14 object-contain z-10 pointer-events-none" />
-              {/* Animated blue label highlight on hover */}
-              <div className="relative z-10 flex flex-col items-center w-full">
-                <AnimatePresence>
-                  {hoveredId === item.id && (
-                    <motion.div
-                      initial={{ opacity: 0, scaleX: 0.7 }}
-                      animate={{ opacity: 1, scaleX: 1 }}
-                      exit={{ opacity: 0, scaleX: 0.7 }}
-                      transition={{ duration: 0.18 }}
-                      className="absolute left-1/2 -translate-x-1/2 top-0 w-full h-full px-1 bg-[#007aff] shadow"
-                      style={{ height: 24, zIndex: 1 }}
-                    />
-                  )}
-                </AnimatePresence>
-                <span
-                  className={`text-sm mt-1 text-center select-none px-1 rounded-sm z-10 drop-shadow-sm ${hoveredId === item.id ? 'text-white' : 'text-black'}`}
-                  style={{textShadow: hoveredId === item.id ? '0 1px 2px #007aff, 0 0px 8px #0002' : '0 1px 2px #fff, 0 0px 8px #0002', position: 'relative'}}
-                >
-                  {item.label}
-                </span>
-              </div>
+              <Image
+                src={item.icon}
+                alt={item.label}
+                width={64}
+                height={56}
+                className="object-contain z-10 pointer-events-none"
+                style={{
+                  width: pxToVw(64), // Convert w-16 (64px) to viewport width units
+                  height: pxToVh(56), // Convert h-14 (56px) to viewport height units
+                }}
+              />
+                              {/* Animated blue label highlight on hover */}
+                <div className="relative z-10 flex flex-col items-center w-full">
+                  <AnimatePresence>
+                    {hoveredId === item.id && (
+                      <motion.div
+                        initial={{ opacity: 0, scaleX: 0.7 }}
+                        animate={{ opacity: 1, scaleX: 1 }}
+                        exit={{ opacity: 0, scaleX: 0.7 }}
+                        transition={{ duration: 0.18 }}
+                        className="absolute left-1/2 -translate-x-1/2 top-1 w-full bg-[#007aff] shadow"
+                        style={{
+                          height: pxToVh(24), // Convert height: 24 to viewport height units
+                          zIndex: 1,
+                          padding: `0 ${pxToVw(4)}`, // Convert px-1 (4px) to viewport width units
+                        }}
+                      />
+                    )}
+                  </AnimatePresence>
+                  <span
+                    className={`text-sm text-center select-none rounded-sm z-10 drop-shadow-sm ${hoveredId === item.id ? 'text-white' : 'text-black'}`}
+                    style={{
+                      textShadow: hoveredId === item.id ? '0 1px 2px #007aff, 0 0px 8px #0002' : '0 1px 2px #fff, 0 0px 8px #0002',
+                      position: 'relative',
+                      marginTop: pxToVh(4), // Convert mt-1 (4px) to viewport height units
+                      padding: `0 ${pxToVw(4)}`, // Convert px-1 (4px) to viewport width units
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                </div>
             </motion.div>
           ))}
         </div>

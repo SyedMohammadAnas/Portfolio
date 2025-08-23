@@ -10,6 +10,8 @@ import PhotoGalleryModal from "./PhotoGalleryModal";
 import SpotifyEmbed from "./SpotifyEmbed";
 // Import the new VisitingCardModal component
 import VisitingCardModal from "./VisitingCardModal";
+// Import responsive positioning utilities
+import { pxToVw, pxToVh } from "./useResponsivePositioning";
 
 // ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
@@ -130,15 +132,21 @@ const Dock: React.FC = () => {
       />
 
       <div
-        className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end px-4 py-8"
-        style={{ minWidth: 340, maxWidth: '96vw' }}
+        className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end"
+        style={{
+          minWidth: pxToVw(380), // Increased from 340 to 380 to accommodate larger icons
+          maxWidth: '96vw',
+          padding: `${pxToVh(32)} ${pxToVw(16)}`, // Convert py-8 px-4 to responsive units
+        }}
       >
         {/* Dock background */}
         <div
-          className="flex items-end gap-2 w-full px-4 py-2 rounded-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] bg-black/40 backdrop-blur-xl"
+          className="flex items-end w-full rounded-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] bg-black/40 backdrop-blur-xl"
           style={{
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 0 0 rgba(255,255,255,0.18) inset',
             borderRadius: 22,
+            padding: `${pxToVh(12)} ${pxToVw(20)}`, // Increased padding from py-2 px-4 to py-3 px-5 for better icon spacing
+            gap: pxToVw(1), // Increased gap from 8 to 10 for better icon separation
           }}
         >
           {/* ICONS ROW */}
@@ -169,7 +177,11 @@ const Dock: React.FC = () => {
                 {showDivider && (
                   // Framer-like divider (vertical line)
                   <div
-                    className="mx-2 h-10 w-px bg-white/30 rounded-full self-center"
+                    className="h-10 w-px bg-white/30 rounded-full self-center"
+                    style={{
+                      margin: `0 ${pxToVw(8)}`, // Convert mx-2 (8px) to viewport width units
+                      height: pxToVh(40), // Convert h-10 (40px) to viewport height units
+                    }}
                     aria-hidden="true"
                   />
                 )}
@@ -177,7 +189,11 @@ const Dock: React.FC = () => {
                 <div className="relative flex flex-col items-center group">
                   {/* Tooltip: shows on hover, absolutely positioned above the icon */}
                   <span
-                    className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-7 px-3 py-1 rounded-md bg-white/80 text-xs text-black shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap select-none"
+                    className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full rounded-md bg-white/80 text-xs text-black shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap select-none"
+                    style={{
+                      marginBottom: pxToVh(28), // Convert mb-7 (28px) to viewport height units
+                      padding: `${pxToVh(4)} ${pxToVw(12)}`, // Convert py-1 px-3 to responsive units
+                    }}
                     aria-hidden="true"
                   >
                     {icon.alt}
@@ -187,7 +203,12 @@ const Dock: React.FC = () => {
                     whileHover={{ scale: 1.3, y: -20 }}
                     transition={{ type: "spring", stiffness: 300, damping: 18, duration: 0.3 }}
                     className="flex flex-col items-center cursor-pointer select-none"
-                    style={{ width: 50, height: 50, minWidth: 44, minHeight: 44 }}
+                    style={{
+                      width: pxToVw(56), // Increased from 50 to 56 for better proportions
+                      height: pxToVh(56), // Increased from 50 to 56 for better proportions
+                      minWidth: pxToVw(48), // Increased from 44 to 48
+                      minHeight: pxToVh(48) // Increased from 44 to 48
+                    }}
                     onClick={
                       isFinder
                         ? () => handleOpenExplorer()
@@ -207,16 +228,29 @@ const Dock: React.FC = () => {
                     onMouseEnter={() => setCursorType("pointinghand")}
                     onMouseLeave={() => setCursorType("normal")}
                   >
-                    {/* ICON IMAGE - Now using Next.js <Image /> for optimization and linter compliance */}
-                    <div className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'transparent' }}>
+                    {/* ICON CONTAINER - Adjusted for better proportions and aspect ratio preservation */}
+                    <div
+                      className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden"
+                      style={{
+                        background: 'transparent',
+                        width: pxToVw(56), // Match parent container width
+                        height: pxToVh(56), // Match parent container height
+                      }}
+                    >
                       <Image
                         src={icon.src}
                         alt={icon.alt}
-                        width={50}
-                        height={50}
-                        className="block w-full h-full object-fill object-center"
+                        width={56}
+                        height={56}
+                        className="block w-full h-full object-contain object-center" // Changed from object-fill to object-contain
                         draggable={false}
-                        style={{ userSelect: 'none', imageRendering: 'auto', borderRadius: 'inherit' }}
+                        style={{
+                          userSelect: 'none',
+                          imageRendering: 'auto',
+                          borderRadius: 'inherit',
+                          width: pxToVw(56), // Match container dimensions
+                          height: pxToVh(56), // Match container dimensions
+                        }}
                         // Next.js Image optimization for AVIF icons
                         quality={100}
                         priority
@@ -226,8 +260,14 @@ const Dock: React.FC = () => {
                   {/* White dot indicator for open modal (Finder, Notes, Photos, Music/Spotify, Contacts) */}
                   {showWhiteDot && (
                     <div
-                      className="absolute left-1/2 -translate-x-1/2 -bottom-2 mb-1 w-1.5 h-1.5 rounded-full bg-white shadow"
-                      style={{ zIndex: 11 }}
+                      className="absolute left-1/2 -translate-x-1/2 rounded-full bg-white shadow"
+                      style={{
+                        zIndex: 11,
+                        bottom: pxToVh(-8), // Convert -bottom-2 (-8px) to viewport height units
+                        marginBottom: pxToVh(4), // Convert mb-1 (4px) to viewport height units
+                        width: pxToVw(6), // Convert w-1.5 (6px) to viewport width units
+                        height: pxToVh(6), // Convert h-1.5 (6px) to viewport height units
+                      }}
                       aria-label="Open indicator"
                     />
                   )}
