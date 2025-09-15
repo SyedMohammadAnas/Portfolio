@@ -31,13 +31,13 @@ export default function Home() {
   // State for folder/trash positions and z-index
   // Reference positions for 1920x1080 resolution - wrapped in useMemo to prevent recreation
   const referenceItems = React.useMemo(() => [
-    { id: 1, label: "Project 02 (Simplingo)", icon: "/media/Icons/appleFolder.avif", x: -350, y: 0, z: 1, type: 'folder', projectId: 2 },
-    { id: 2, label: "Project 01 (AbsolutMess)", icon: "/media/Icons/appleFolder.avif", x: -120, y: 120, z: 1, type: 'folder', projectId: 1 },
-    { id: 3, label: "Project 03 (Leafpress)", icon: "/media/Icons/appleFolder.avif", x: -220, y: 240, z: 1, type: 'folder', projectId: 3 },
-    { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: 0, y: 360, z: 1, type: 'trash' },
+    { id: 1, label: "Project 02", icon: "/media/Icons/appleFolder.avif", x: -450, y: 0, z: 1, type: 'folder', projectId: 2 },
+    { id: 2, label: "Project 01", icon: "/media/Icons/appleFolder.avif", x: -270, y: 120, z: 1, type: 'folder', projectId: 1 },
+    { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -500, y: 270, z: 1, type: 'folder', projectId: 3 },
+    { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: -10, y: 360, z: 1, type: 'trash' },
     // PDF file that opens resume in new tab when clicked
-    { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
-    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1500, y: -60, z: 1, type: 'folder' },
+    { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1800, y: -57, z: 1, type: 'file' },
+    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1600, y: 0, z: 1, type: 'folder' },
   ], []);
 
   // Apply scaling to items based on current viewport

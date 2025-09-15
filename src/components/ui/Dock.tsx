@@ -10,6 +10,10 @@ import PhotoGalleryModal from "./PhotoGalleryModal";
 import SpotifyEmbed from "./SpotifyEmbed";
 // Import the new VisitingCardModal component
 import VisitingCardModal from "./VisitingCardModal";
+// Import the new EmailModal component
+import EmailModal from "./EmailModal";
+// Import the new MapsModal component
+import MapsModal from "./MapsModal";
 // Import responsive positioning utilities
 import { pxToVw, pxToVh } from "./useResponsivePositioning";
 
@@ -51,9 +55,17 @@ const Dock: React.FC = () => {
   const [spotifyEmbedOpen, setSpotifyEmbedOpen] = useState(false);
   // State for visiting card modal visibility
   const [visitingCardOpen, setVisitingCardOpen] = useState(false);
+  // State for email modal visibility
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  // State for maps modal visibility
+  const [mapsModalOpen, setMapsModalOpen] = useState(false);
   // State for random modal positions
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [galleryPosition, setGalleryPosition] = useState({ x: 0, y: 0 });
+  // State for email modal position
+  const [emailPosition, setEmailPosition] = useState({ x: 0, y: 0 });
+  // State for maps modal position
+  const [mapsPosition, setMapsPosition] = useState({ x: 0, y: 0 });
 
   // Function to generate random position within viewport bounds
   const generateRandomPosition = (modalWidth: number, modalHeight: number) => {
@@ -98,6 +110,31 @@ const Dock: React.FC = () => {
     setVisitingCardOpen(!visitingCardOpen);
   };
 
+  // Handler to toggle email modal
+  const handleToggleEmailModal = () => {
+    if (!emailModalOpen) {
+      setEmailPosition(generateRandomPosition(800, 500)); // EmailModal dimensions
+      setEmailModalOpen(true);
+    } else {
+      setEmailModalOpen(false);
+    }
+  };
+
+  // Handler to toggle maps modal
+  const handleToggleMapsModal = () => {
+    if (!mapsModalOpen) {
+      setMapsPosition(generateRandomPosition(900, 600)); // MapsModal dimensions
+      setMapsModalOpen(true);
+    } else {
+      setMapsModalOpen(false);
+    }
+  };
+
+  // Handler to toggle sticky note
+  const handleToggleStickyNote = () => {
+    setStickyNoteOpen(!stickyNoteOpen);
+  };
+
   return (
     <>
       {/* Render ExplorerModal if open, pass all required props */}
@@ -131,6 +168,20 @@ const Dock: React.FC = () => {
         onClose={() => setVisitingCardOpen(false)}
       />
 
+      {/* Render EmailModal component */}
+      <EmailModal
+        isOpen={emailModalOpen}
+        onClose={() => setEmailModalOpen(false)}
+        initialPosition={emailPosition}
+      />
+
+      {/* Render MapsModal component */}
+      <MapsModal
+        isOpen={mapsModalOpen}
+        onClose={() => setMapsModalOpen(false)}
+        initialPosition={mapsPosition}
+      />
+
       <div
         className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end"
         style={{
@@ -145,7 +196,7 @@ const Dock: React.FC = () => {
           style={{
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 0 0 rgba(255,255,255,0.18) inset',
             borderRadius: 22,
-            padding: `${pxToVh(12)} ${pxToVw(20)}`, // Increased padding from py-2 px-4 to py-3 px-5 for better icon spacing
+            padding: `${pxToVh(7)} ${pxToVw(7)}`, // Increased padding from py-2 px-4 to py-3 px-5 for better icon spacing
             gap: pxToVw(1), // Increased gap from 8 to 10 for better icon separation
           }}
         >
@@ -165,13 +216,19 @@ const Dock: React.FC = () => {
             const isMusic = icon.alt === "Music";
             // Check if this is the Contacts icon
             const isContacts = icon.alt === "Contacts";
+            // Check if this is the Mail icon
+            const isMail = icon.alt === "Mail";
+            // Check if this is the Maps icon
+            const isMaps = icon.alt === "Maps";
             // Determine if the white dot should be shown for this icon
             const showWhiteDot =
               (isFinder && explorerModalOpen) ||
               (isNotes && stickyNoteOpen) ||
               (isPhotos && galleryOpen) ||
               (isMusic && spotifyEmbedOpen) ||
-              (isContacts && visitingCardOpen);
+              (isContacts && visitingCardOpen) ||
+              (isMail && emailModalOpen) ||
+              (isMaps && mapsModalOpen);
             return (
               <React.Fragment key={icon.alt}>
                 {showDivider && (
@@ -213,7 +270,7 @@ const Dock: React.FC = () => {
                       isFinder
                         ? () => handleOpenExplorer()
                         : isNotes
-                        ? () => setStickyNoteOpen(true)
+                        ? () => handleToggleStickyNote()
                         : isPhotos
                         ? () => handleOpenGallery()
                         : isGitHub
@@ -222,6 +279,10 @@ const Dock: React.FC = () => {
                         ? () => handleToggleSpotify()
                         : isContacts
                         ? () => handleToggleVisitingCard()
+                        : isMail
+                        ? () => handleToggleEmailModal()
+                        : isMaps
+                        ? () => handleToggleMapsModal()
                         : undefined
                     }
                     // Set custom cursor on hover

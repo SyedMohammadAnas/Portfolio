@@ -288,16 +288,49 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                   <div>
                     <div className="flex text-xs font-semibold text-grey-700 mb-0 pl-4 opacity-40">Myself</div>
                     <div className="flex flex-col gap-1">
-                      {['Work', 'About Me', 'Resume', 'Trash'].map((item, idx) => (
+                      {[
+                        { name: 'Work', icon: '💼' },
+                        { name: 'About Me', icon: '👤' },
+                        { name: 'Resume', icon: '📄' },
+                        { name: 'Trash', icon: '🗑️' }
+                      ].map((item, idx) => (
                         <button
-                          key={item}
+                          key={item.name}
                           className="flex items-center gap-2 px-4 py-1 rounded-md text-sm font-medium text-gray-800/90 hover:bg-white/30 transition-colors"
                           onMouseEnter={() => setCursorType("pointinghand")}
                           onMouseLeave={() => setCursorType("normal")}
                         >
-                          {/* Placeholder icon (replace with real icons as needed) */}
-                          <span className="text-[13px] text-gray-400">{['💼','👤','📄','🗑️'][idx]}</span>
-                          <span>{item}</span>
+                          {/* SVG Icons for each section */}
+                          {idx === 0 && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                              <path d="M12 12h.01"/>
+                              <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                              <path d="M22 13a18.15 18.15 0 0 1-20 0"/>
+                              <rect width="20" height="14" x="2" y="6" rx="2"/>
+                            </svg>
+                          )}
+                          {idx === 1 && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                              <circle cx="12" cy="8" r="5"/>
+                              <path d="M20 21a8 8 0 0 0-16 0"/>
+                            </svg>
+                          )}
+                          {idx === 2 && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                              <path d="M15 12h-5"/>
+                              <path d="M15 8h-5"/>
+                              <path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+                              <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/>
+                            </svg>
+                          )}
+                          {idx === 3 && (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                              <path d="M3 6h18"/>
+                              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                          )}
+                          <span>{item.name}</span>
                         </button>
                       ))}
                     </div>

@@ -21,23 +21,54 @@ const StickyNote: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   // Track drag state
   const [isDragging, setIsDragging] = useState(false);
 
+  // Calculate initial position for the sticky note
+  const getInitialPosition = (): { x: number; y: number } => {
+    const noteWidth = 320; // w-80 = 320px
+    const noteHeight = 280; // Approximate height
+    const padding = 50; // Minimum distance from edges
+
+    // Position in top-left area but with some randomness
+    return {
+      x: Math.max(padding, Math.min(200, window.innerWidth * 0.1)),
+      y: Math.max(padding, Math.min(150, window.innerHeight * 0.1))
+    };
+  };
+
   // Update drag constraints to keep note within viewport
   useEffect(() => {
     function updateConstraints() {
       if (noteRef.current) {
         const note = noteRef.current;
         const rect = note.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        // Calculate constraints to keep the entire note visible
         setConstraints({
           left: -rect.left,
           top: -rect.top,
-          right: window.innerWidth - rect.right,
-          bottom: window.innerHeight - rect.bottom,
+          right: viewportWidth - rect.right,
+          bottom: viewportHeight - rect.bottom,
         });
       }
     }
+
+    // Update constraints immediately
     updateConstraints();
+
+    // Update constraints on window resize
     window.addEventListener("resize", updateConstraints);
+
+    // Clean up event listener
     return () => window.removeEventListener("resize", updateConstraints);
+  }, []);
+
+  // Prevent background scroll when sticky note is open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   return (
@@ -45,17 +76,33 @@ const StickyNote: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       ref={noteRef}
       initial={{ opacity: 0, y: -40 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -40 }}
       transition={{ duration: 0.7, delay: 0.2 }}
-      className="absolute left-8 top-16 z-30"
+      className="absolute left-8 top-16 z-[150]" // Back to simple top-left positioning
       drag
       dragConstraints={constraints}
       dragMomentum={false}
-      dragElastic={0}
+      dragElastic={0.1}
       // Cursor logic for drag/hover
       onMouseEnter={() => !isDragging && setCursorType("openhand")}
       onMouseLeave={() => { setCursorType("normal"); setIsDragging(false); }}
       onDragStart={() => { setCursorType("closedhand"); setIsDragging(true); }}
       onDragEnd={() => { setCursorType("openhand"); setIsDragging(false); }}
+      // Update constraints during drag to handle window resizing or position changes
+      onDrag={() => {
+        if (noteRef.current) {
+          const rect = noteRef.current.getBoundingClientRect();
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+
+          setConstraints({
+            left: -rect.left,
+            top: -rect.top,
+            right: viewportWidth - rect.right,
+            bottom: viewportHeight - rect.bottom,
+          });
+        }
+      }}
     >
       {/* Card container for the sticky note */}
       <Card className="bg-yellow-200 border-yellow-300 shadow-lg rounded-sm w-80 p-0 font-mono overflow-hidden">
@@ -66,18 +113,24 @@ const StickyNote: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <button
               aria-label="Close"
               onClick={onClose}
+              onMouseEnter={() => setCursorType("pointinghand")}
+              onMouseLeave={() => setCursorType("normal")}
               className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform"
               style={{ boxShadow: '0 1px 2px #0002' }}
             />
             <button
               aria-label="Minimize"
               onClick={onClose}
+              onMouseEnter={() => setCursorType("pointinghand")}
+              onMouseLeave={() => setCursorType("normal")}
               className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform"
               style={{ boxShadow: '0 1px 2px #0002' }}
             />
             <button
               aria-label="Maximize"
               onClick={onClose}
+              onMouseEnter={() => setCursorType("pointinghand")}
+              onMouseLeave={() => setCursorType("normal")}
               className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform"
               style={{ boxShadow: '0 1px 2px #0002' }}
             />
