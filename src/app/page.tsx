@@ -34,15 +34,21 @@ export default function Home() {
 
   // State for folder/trash positions and z-index
   // Reference positions for 1920x1080 resolution - wrapped in useMemo to prevent recreation
-  const referenceItems = React.useMemo(() => [
-    { id: 1, label: "Project 02", icon: "/media/Icons/appleFolder.avif", x: -450, y: 0, z: 1, type: 'folder', projectId: 2 },
-    { id: 2, label: "Project 01", icon: "/media/Icons/appleFolder.avif", x: -270, y: 120, z: 1, type: 'folder', projectId: 1 },
-    { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -500, y: 270, z: 1, type: 'folder', projectId: 3 },
-    { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: -10, y: 360, z: 1, type: 'trash' },
-    // PDF file that opens resume in new tab when clicked
-    { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
-    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: 0, z: 1, type: 'folder' },
-  ], []);
+  // Hide all items on mobile view
+  const referenceItems = React.useMemo(() => {
+    if (isMobile) {
+      return []; // Return empty array for mobile - no folder icons
+    }
+    return [
+      { id: 1, label: "Project 02", icon: "/media/Icons/appleFolder.avif", x: -450, y: 0, z: 1, type: 'folder', projectId: 2 },
+      { id: 2, label: "Project 01", icon: "/media/Icons/appleFolder.avif", x: -270, y: 120, z: 1, type: 'folder', projectId: 1 },
+      { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -500, y: 270, z: 1, type: 'folder', projectId: 3 },
+      { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: -10, y: 360, z: 1, type: 'trash' },
+      // PDF file that opens resume in new tab when clicked
+      { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
+      { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: 0, z: 1, type: 'folder' },
+    ];
+  }, [isMobile]);
 
   // Apply scaling to items based on current viewport
   const [items, setItems] = useState(() =>
@@ -75,6 +81,13 @@ export default function Home() {
   const [draggedItems, setDraggedItems] = useState<Set<number>>(new Set());
 
   const setCursorType = useCursor(); // Get cursor setter
+
+  // Disable custom cursor on mobile
+  React.useEffect(() => {
+    if (isMobile) {
+      setCursorType("normal"); // Keep normal cursor on mobile
+    }
+  }, [isMobile, setCursorType]);
 
   // Function to generate random position within viewport bounds
   const generateRandomPosition = () => {
@@ -210,34 +223,50 @@ export default function Home() {
         >
           {/* Welcome text - smaller and positioned above, also lifted */}
           <div style={{ marginTop: isMobile ? pxToVh(34) : pxToVh(68) }}> {/* Reduced margin on mobile */}
-            <TextModifier
-              text="welcome to my"
-              className={`font-light tracking-wide ${
-                isMobile ? 'text-4xl sm:text-4xl' : 'text-5xl'
-              }`}
-              baseWeight={400}
-              maxWeight={900}
-              maxScale={isMobile ? 1.1 : 1.3} // Reduced scale for mobile
-              maxOffset={isMobile ? 3 : 5} // Reduced offset for mobile
-              animationSpeed={0.2}
-              proximityRadius={isMobile ? 60 : 100} // Reduced proximity radius for mobile
-            />
+            {isMobile ? (
+              // Simple text for mobile - no special effects
+              <div
+                className="font-light tracking-wide text-4xl text-black"
+              >
+                welcome to my
+              </div>
+            ) : (
+              // TextModifier with special effects for desktop
+              <TextModifier
+                text="welcome to my"
+                className="font-light tracking-wide text-5xl"
+                baseWeight={400}
+                maxWeight={900}
+                maxScale={1.3}
+                maxOffset={5}
+                animationSpeed={0.2}
+                proximityRadius={100}
+              />
+            )}
           </div>
 
           {/* Main PORTFOLIO text - larger and more prominent, also lifted */}
           <div className="flex items-center justify-center">
-            <TextModifier
-              text="PORTFOLIO."
-              className={`font-extrabold tracking-wider ${
-                isMobile ? 'text-6xl sm:text-7xl' : 'text-8xl'
-              }`}
-              baseWeight={400}
-              maxWeight={900}
-              maxScale={isMobile ? 1.1 : 1.3} // Reduced scale for mobile
-              maxOffset={isMobile ? 8 : 15} // Reduced offset for mobile
-              animationSpeed={0.2} // Increased for faster animation, as in test2/page.tsx
-              proximityRadius={isMobile ? 90 : 150} // Reduced proximity radius for mobile
-            />
+            {isMobile ? (
+              // Simple text for mobile - no special effects
+              <div
+                className="font-extrabold tracking-wider text-6xl text-black"
+              >
+                PORTFOLIO.
+              </div>
+            ) : (
+              // TextModifier with special effects for desktop
+              <TextModifier
+                text="PORTFOLIO."
+                className="font-extrabold tracking-wider text-8xl"
+                baseWeight={400}
+                maxWeight={900}
+                maxScale={1.3}
+                maxOffset={15}
+                animationSpeed={0.2}
+                proximityRadius={150}
+              />
+            )}
           </div>
         </div>
 

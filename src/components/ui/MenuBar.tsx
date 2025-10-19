@@ -39,29 +39,35 @@ const MenuBar: React.FC = () => {
         padding: `0 ${isMobile ? pxToVw(8) : pxToVw(16)}`, // Smaller padding on mobile
       }}
     >
-      {/* Left: Apple Icon and Portfolio Title */}
-      <div
-        className="flex items-center font-bold text-black"
-        style={{ gap: isMobile ? pxToVw(4) : pxToVw(8) }} // Smaller gap on mobile
-      >
-        {/* Apple icon on the far left */}
-        <Image
-          src="/media/IconsPNG/appleIcon.png"
-          alt="Apple Icon"
-          width={isMobile ? 16 : 20}
-          height={isMobile ? 20 : 24}
-          className="mr-2"
-          style={{
-            width: isMobile ? pxToVw(12) : pxToVw(16), // Smaller icon on mobile
-            height: isMobile ? pxToVh(16) : pxToVh(20), // Smaller icon on mobile
-          }}
-        />
-        {/* Portfolio title */}
-        <span className={`font-bold text-black underline font-mono ${
-          isMobile ? 'text-xs' : 'text-sm'
-        }`}>
-          {isMobile ? 'Anas\'s Portfolio' : 'Syed Mohammad Anas\'s Portfolio'}
-        </span>
+      {/* Left: Portfolio Title Only on Mobile */}
+      <div className="flex items-center font-bold text-black">
+        {isMobile ? (
+          // Mobile: Only show "Anas's Portfolio" text
+          <span className="font-bold text-black underline font-mono text-xs">
+            Anas's Portfolio
+          </span>
+        ) : (
+          // Desktop: Show Apple icon + full title
+          <div
+            className="flex items-center"
+            style={{ gap: pxToVw(8) }}
+          >
+            <Image
+              src="/media/IconsPNG/appleIcon.png"
+              alt="Apple Icon"
+              width={20}
+              height={24}
+              className="mr-2"
+              style={{
+                width: pxToVw(16),
+                height: pxToVh(20),
+              }}
+            />
+            <span className="font-bold text-black underline font-mono text-sm">
+              Syed Mohammad Anas's Portfolio
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Center: Navigation Links */}
@@ -72,49 +78,75 @@ const MenuBar: React.FC = () => {
         className="flex items-center text-black"
         style={{ gap: isMobile ? pxToVw(6) : pxToVw(12) }} // Smaller gap on mobile
       >
-        {/* System icons (WiFi, Sun, Battery) - hide some on mobile */}
-        {!isMobile && (
-          <Wifi
-            className="text-black"
-            style={{
-              width: pxToVw(20), // Convert w-5 (20px) to viewport width units
-              height: pxToVh(20), // Convert h-5 (20px) to viewport height units
-            }}
-          />
+        {/* Mobile: Only WiFi, Battery, and Time */}
+        {isMobile ? (
+          <>
+            {/* WiFi Icon */}
+            <Wifi
+              className="text-black"
+              style={{
+                width: pxToVw(16),
+                height: pxToVh(16),
+              }}
+            />
+            {/* Battery Icon */}
+            <BatteryFull
+              className="text-black"
+              style={{
+                width: pxToVw(16),
+                height: pxToVh(16),
+              }}
+            />
+            {/* Time Only */}
+            <span
+              className="font-mono text-black text-xs"
+              style={{ marginLeft: pxToVw(2) }}
+            >
+              {time}
+            </span>
+          </>
+        ) : (
+          /* Desktop: Full system icons and date */
+          <>
+            <Wifi
+              className="text-black"
+              style={{
+                width: pxToVw(20),
+                height: pxToVh(20),
+              }}
+            />
+            <Sun
+              className="text-black"
+              style={{
+                width: pxToVw(20),
+                height: pxToVh(20),
+              }}
+            />
+            <BatteryFull
+              className="text-black"
+              style={{
+                width: pxToVw(20),
+                height: pxToVh(20),
+              }}
+            />
+            <span
+              className="text-black font-mono text-black"
+              style={{ marginLeft: pxToVw(8) }}
+            >
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <span
+              className="font-mono text-black"
+              style={{ marginLeft: pxToVw(4) }}
+            >
+              {time}
+            </span>
+          </>
         )}
-        <Sun
-          className="text-black"
-          style={{
-            width: isMobile ? pxToVw(16) : pxToVw(20), // Smaller on mobile
-            height: isMobile ? pxToVh(16) : pxToVh(20), // Smaller on mobile
-          }}
-        />
-        <BatteryFull
-          className="text-black"
-          style={{
-            width: isMobile ? pxToVw(16) : pxToVw(20), // Smaller on mobile
-            height: isMobile ? pxToVh(16) : pxToVh(20), // Smaller on mobile
-          }}
-        />
-        {/* Date and Time - simplified on mobile */}
-        {!isMobile && (
-          <span
-            className="text-black font-mono text-black"
-            style={{ marginLeft: pxToVw(8) }} // Convert ml-2 (8px) to viewport width units
-          >
-            {new Date().toLocaleDateString("en-US", {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-            })}
-          </span>
-        )}
-        <span
-          className={`font-mono text-black ${isMobile ? 'text-xs' : ''}`}
-          style={{ marginLeft: isMobile ? pxToVw(2) : pxToVw(4) }} // Smaller margin on mobile
-        >
-          {time}
-        </span>
       </div>
     </div>
   );

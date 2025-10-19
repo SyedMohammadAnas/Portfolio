@@ -306,9 +306,9 @@ const Dock: React.FC = () => {
                         ? () => handleToggleMapsModal()
                         : undefined
                     }
-                    // Set custom cursor on hover
-                    onMouseEnter={() => setCursorType("pointinghand")}
-                    onMouseLeave={() => setCursorType("normal")}
+                    // Set custom cursor on hover (disabled for mobile)
+                    onMouseEnter={() => !isMobile && setCursorType("pointinghand")}
+                    onMouseLeave={() => !isMobile && setCursorType("normal")}
                   >
                     {/* ICON CONTAINER - Adjusted for better proportions and aspect ratio preservation */}
                     <div
