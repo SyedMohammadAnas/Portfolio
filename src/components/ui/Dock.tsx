@@ -16,8 +16,10 @@ import EmailModal from "./EmailModal";
 import MapsModal from "./MapsModal";
 // Import responsive positioning utilities
 import { pxToVw, pxToVh } from "./useResponsivePositioning";
+// Import mobile detection hook
+import { useMobileDetection } from "./useMobileDetection";
 
-// ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
+// DESKTOP ICONS DATA ARRAY - Only use .avif icons that exist in /public/media/Icons
 const dockIcons = [
   { src: "/media/Icons/appleFinder.avif", alt: "Finder" },
   { src: "/media/Icons/appleSafari.avif", alt: "Safari" },
@@ -38,6 +40,14 @@ const dockIcons = [
   { src: "/media/Icons/appleTrash.avif", alt: "Trash" },
 ];
 
+// MOBILE ICONS DATA ARRAY - Only 4 icons for mobile view
+const mobileDockIcons = [
+  { src: "/media/Icons/appleFinder.avif", alt: "Finder" },
+  { src: "/media/Icons/applePhotos.avif", alt: "Photos" },
+  { src: "/media/Icons/appleMails.avif", alt: "Mail" },
+  { src: "/media/IconsPNG/githubLogo2.png", alt: "GitHub" },
+];
+
 /**
  * Dock component replicating the MacBook dock visually and interactively.
  * - Uses only .avif icons from /public/media/Icons
@@ -46,6 +56,7 @@ const dockIcons = [
  */
 const Dock: React.FC = () => {
   const setCursorType = useCursor(); // Get cursor setter
+  const isMobile = useMobileDetection(); // Get mobile detection state
   // All hooks must be called before any return (React rules of hooks)
   const [explorerModalOpen, setExplorerModalOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(1);
@@ -185,25 +196,32 @@ const Dock: React.FC = () => {
       <div
         className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end"
         style={{
-          minWidth: pxToVw(380), // Increased from 340 to 380 to accommodate larger icons
-          maxWidth: '96vw',
-          padding: `${pxToVh(32)} ${pxToVw(16)}`, // Convert py-8 px-4 to responsive units
+          // Mobile: extend to screen edges with smaller gap, Desktop: fixed width
+          minWidth: isMobile ? 'calc(100vw - 20px)' : pxToVw(380),
+          maxWidth: isMobile ? 'calc(100vw - 20px)' : '96vw',
+          padding: isMobile
+            ? '8px 4px' // Fixed pixel values for mobile
+            : `${pxToVh(32)} ${pxToVw(16)}`, // Convert py-8 px-4 to responsive units
         }}
       >
         {/* Dock background */}
         <div
-          className="flex items-end w-full rounded-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] bg-black/40 backdrop-blur-xl"
+          className={`w-full rounded-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] bg-black/40 backdrop-blur-xl ${
+            isMobile ? 'grid grid-cols-4 items-center' : 'flex items-end'
+          }`}
           style={{
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.45), 0 1.5px 0 0 rgba(255,255,255,0.18) inset',
             borderRadius: 22,
-            padding: `${pxToVh(7)} ${pxToVw(7)}`, // Increased padding from py-2 px-4 to py-3 px-5 for better icon spacing
-            gap: pxToVw(1), // Increased gap from 8 to 10 for better icon separation
+            padding: isMobile
+              ? '4px 2px' // Fixed pixel values - minimal padding for mobile
+              : `${pxToVh(7)} ${pxToVw(7)}`, // Increased padding from py-2 px-4 to py-3 px-5 for better icon spacing
+            gap: isMobile ? '2px' : pxToVw(1), // Fixed pixel gap for mobile - very small
           }}
         >
           {/* ICONS ROW */}
-          {dockIcons.map((icon) => {
-            // Insert divider before the first icon with divider: true
-            const showDivider = icon.divider === true;
+          {(isMobile ? mobileDockIcons : dockIcons).map((icon) => {
+            // Insert divider before the first icon with divider: true (only for desktop icons)
+            const showDivider = !isMobile && (icon as any).divider === true;
             // Check if this is the Finder icon
             const isFinder = icon.alt === "Finder";
             // Check if this is the Notes icon
@@ -257,14 +275,17 @@ const Dock: React.FC = () => {
                   </span>
                   {/* Animated icon */}
                   <motion.div
-                    whileHover={{ scale: 1.3, y: -20 }}
+                    whileHover={{
+                      scale: isMobile ? 1.15 : 1.3, // Reduced scale for mobile
+                      y: isMobile ? -10 : -20 // Reduced vertical movement for mobile
+                    }}
                     transition={{ type: "spring", stiffness: 300, damping: 18, duration: 0.3 }}
                     className="flex flex-col items-center cursor-pointer select-none"
                     style={{
-                      width: pxToVw(56), // Increased from 50 to 56 for better proportions
-                      height: pxToVh(56), // Increased from 50 to 56 for better proportions
-                      minWidth: pxToVw(48), // Increased from 44 to 48
-                      minHeight: pxToVh(48) // Increased from 44 to 48
+                      width: isMobile ? '80px' : pxToVw(56), // Fixed 80px for mobile - much larger
+                      height: isMobile ? '80px' : pxToVh(56), // Fixed 80px for mobile - much larger
+                      minWidth: isMobile ? '70px' : pxToVw(48), // Fixed minimum for mobile
+                      minHeight: isMobile ? '70px' : pxToVh(48) // Fixed minimum for mobile
                     }}
                     onClick={
                       isFinder
@@ -294,23 +315,23 @@ const Dock: React.FC = () => {
                       className="w-full h-full flex items-center justify-center rounded-xl overflow-hidden"
                       style={{
                         background: 'transparent',
-                        width: pxToVw(56), // Match parent container width
-                        height: pxToVh(56), // Match parent container height
+                        width: isMobile ? '80px' : pxToVw(56), // Fixed 80px for mobile
+                        height: isMobile ? '80px' : pxToVh(56), // Fixed 80px for mobile
                       }}
                     >
                       <Image
                         src={icon.src}
                         alt={icon.alt}
-                        width={56}
-                        height={56}
+                        width={isMobile ? 80 : 56}
+                        height={isMobile ? 80 : 56}
                         className="block w-full h-full object-contain object-center" // Changed from object-fill to object-contain
                         draggable={false}
                         style={{
                           userSelect: 'none',
                           imageRendering: 'auto',
                           borderRadius: 'inherit',
-                          width: pxToVw(56), // Match container dimensions
-                          height: pxToVh(56), // Match container dimensions
+                          width: isMobile ? '80px' : pxToVw(56), // Fixed 80px for mobile
+                          height: isMobile ? '80px' : pxToVh(56), // Fixed 80px for mobile
                         }}
                         // Next.js Image optimization for AVIF icons
                         quality={100}

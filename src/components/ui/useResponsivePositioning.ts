@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 const REFERENCE_WIDTH = 1920;
 const REFERENCE_HEIGHT = 1080;
 
+// Mobile reference resolution (iPhone 14 Pro Max: 430x932)
+const MOBILE_REFERENCE_WIDTH = 430;
+const MOBILE_REFERENCE_HEIGHT = 932;
+
 // Interface for responsive positioning values
 interface ResponsivePositioning {
   scaleX: number;
@@ -32,9 +36,16 @@ export const useResponsivePositioning = (): ResponsivePositioning => {
       const currentWidth = window.innerWidth;
       const currentHeight = window.innerHeight;
 
-      // Calculate scaling factors relative to reference resolution
-      const scaleX = currentWidth / REFERENCE_WIDTH;
-      const scaleY = currentHeight / REFERENCE_HEIGHT;
+      // Check if we're in mobile viewport (< 768px)
+      const isMobile = currentWidth < 768;
+
+      // Use appropriate reference resolution based on viewport
+      const refWidth = isMobile ? MOBILE_REFERENCE_WIDTH : REFERENCE_WIDTH;
+      const refHeight = isMobile ? MOBILE_REFERENCE_HEIGHT : REFERENCE_HEIGHT;
+
+      // Calculate scaling factors relative to appropriate reference resolution
+      const scaleX = currentWidth / refWidth;
+      const scaleY = currentHeight / refHeight;
 
       // Use the smaller scale to ensure everything fits within viewport
       const scale = Math.min(scaleX, scaleY);
@@ -80,17 +91,21 @@ export const scaleValue = (value: number, scale: number): number => {
 /**
  * Utility function to convert a pixel value to viewport width units
  * @param pixels - The pixel value to convert
+ * @param isMobile - Whether to use mobile reference resolution
  * @returns The value in viewport width units (vw)
  */
-export const pxToVw = (pixels: number): string => {
-  return `${(pixels / REFERENCE_WIDTH) * 100}vw`;
+export const pxToVw = (pixels: number, isMobile: boolean = false): string => {
+  const refWidth = isMobile ? MOBILE_REFERENCE_WIDTH : REFERENCE_WIDTH;
+  return `${(pixels / refWidth) * 100}vw`;
 };
 
 /**
  * Utility function to convert a pixel value to viewport height units
  * @param pixels - The pixel value to convert
+ * @param isMobile - Whether to use mobile reference resolution
  * @returns The value in viewport height units (vh)
  */
-export const pxToVh = (pixels: number): string => {
-  return `${(pixels / REFERENCE_HEIGHT) * 100}vh`;
+export const pxToVh = (pixels: number, isMobile: boolean = false): string => {
+  const refHeight = isMobile ? MOBILE_REFERENCE_HEIGHT : REFERENCE_HEIGHT;
+  return `${(pixels / refHeight) * 100}vh`;
 };

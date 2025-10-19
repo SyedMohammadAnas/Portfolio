@@ -13,6 +13,8 @@ import GridBackground from "@/components/ui/GridBackground";
 import TextModifier from "@/components/ui/TextModifier";
 // Import responsive positioning hook
 import { useResponsivePositioning, pxToVw, pxToVh } from "@/components/ui/useResponsivePositioning";
+// Import mobile detection hook
+import { useMobileDetection } from "@/components/ui/useMobileDetection";
 
 // Interface for modal state management
 interface ModalState {
@@ -27,6 +29,8 @@ interface ModalState {
 export default function Home() {
   // Get responsive positioning values
   const { scale } = useResponsivePositioning();
+  // Get mobile detection state
+  const isMobile = useMobileDetection();
 
   // State for folder/trash positions and z-index
   // Reference positions for 1920x1080 resolution - wrapped in useMemo to prevent recreation
@@ -36,8 +40,8 @@ export default function Home() {
     { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -500, y: 270, z: 1, type: 'folder', projectId: 3 },
     { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: -10, y: 360, z: 1, type: 'trash' },
     // PDF file that opens resume in new tab when clicked
-    { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1800, y: -57, z: 1, type: 'file' },
-    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1600, y: 0, z: 1, type: 'folder' },
+    { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
+    { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: 0, z: 1, type: 'folder' },
   ], []);
 
   // Apply scaling to items based on current viewport
@@ -201,20 +205,22 @@ export default function Home() {
         <div
           className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           style={{
-            marginTop: pxToVh(-72), // Convert -mt-18 (72px) to viewport height units
+            marginTop: isMobile ? pxToVh(-36) : pxToVh(-72), // Reduced negative margin on mobile
           }}
         >
           {/* Welcome text - smaller and positioned above, also lifted */}
-          <div style={{ marginTop: pxToVh(68) }}> {/* Convert mt-17 (68px) to viewport height units */}
+          <div style={{ marginTop: isMobile ? pxToVh(34) : pxToVh(68) }}> {/* Reduced margin on mobile */}
             <TextModifier
               text="welcome to my"
-              className="text-5xl font-light tracking-wide"
+              className={`font-light tracking-wide ${
+                isMobile ? 'text-4xl sm:text-4xl' : 'text-5xl'
+              }`}
               baseWeight={400}
               maxWeight={900}
-              maxScale={1.3}
-              maxOffset={5}
+              maxScale={isMobile ? 1.1 : 1.3} // Reduced scale for mobile
+              maxOffset={isMobile ? 3 : 5} // Reduced offset for mobile
               animationSpeed={0.2}
-              proximityRadius={100}
+              proximityRadius={isMobile ? 60 : 100} // Reduced proximity radius for mobile
             />
           </div>
 
@@ -222,13 +228,15 @@ export default function Home() {
           <div className="flex items-center justify-center">
             <TextModifier
               text="PORTFOLIO."
-              className="text-8xl font-extrabold tracking-wider"
+              className={`font-extrabold tracking-wider ${
+                isMobile ? 'text-6xl sm:text-7xl' : 'text-8xl'
+              }`}
               baseWeight={400}
               maxWeight={900}
-              maxScale={1.3}
-              maxOffset={15}
+              maxScale={isMobile ? 1.1 : 1.3} // Reduced scale for mobile
+              maxOffset={isMobile ? 8 : 15} // Reduced offset for mobile
               animationSpeed={0.2} // Increased for faster animation, as in test2/page.tsx
-              proximityRadius={150}
+              proximityRadius={isMobile ? 90 : 150} // Reduced proximity radius for mobile
             />
           </div>
         </div>
@@ -237,9 +245,9 @@ export default function Home() {
         <div
           className="absolute flex flex-col items-center z-10"
           style={{
-            right: pxToVw(32), // Convert right-8 (32px) to viewport width units
-            top: pxToVh(96),   // Convert top-24 (96px) to viewport height units
-            gap: pxToVh(32),   // Convert gap-8 (32px) to viewport height units
+            right: isMobile ? pxToVw(16) : pxToVw(32), // Closer to edge on mobile
+            top: isMobile ? pxToVh(48) : pxToVh(96),   // Higher positioning on mobile
+            gap: isMobile ? pxToVh(16) : pxToVh(32),   // Smaller gap on mobile
           }}
         >
           {/* Draggable folders and trash */}
@@ -291,12 +299,12 @@ export default function Home() {
               <Image
                 src={item.icon}
                 alt={item.label}
-                width={64}
-                height={56}
+                width={isMobile ? 40 : 64}
+                height={isMobile ? 35 : 56}
                 className="object-contain z-10 pointer-events-none"
                 style={{
-                  width: pxToVw(64), // Convert w-16 (64px) to viewport width units
-                  height: pxToVh(56), // Convert h-14 (56px) to viewport height units
+                  width: isMobile ? pxToVw(40) : pxToVw(64), // Smaller icons on mobile
+                  height: isMobile ? pxToVh(35) : pxToVh(56), // Smaller icons on mobile
                 }}
               />
                               {/* Animated blue label highlight on hover */}
@@ -318,7 +326,9 @@ export default function Home() {
                     )}
                   </AnimatePresence>
                   <span
-                    className={`text-sm text-center select-none rounded-sm z-10 drop-shadow-sm ${hoveredId === item.id ? 'text-white' : 'text-black'}`}
+                    className={`text-center select-none rounded-sm z-10 drop-shadow-sm ${
+                      isMobile ? 'text-xs' : 'text-sm'
+                    } ${hoveredId === item.id ? 'text-white' : 'text-black'}`}
                     style={{
                       textShadow: hoveredId === item.id ? '0 1px 2px #007aff, 0 0px 8px #0002' : '0 1px 2px #fff, 0 0px 8px #0002',
                       position: 'relative',
