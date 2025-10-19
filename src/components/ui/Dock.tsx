@@ -221,7 +221,7 @@ const Dock: React.FC = () => {
           {/* ICONS ROW */}
           {(isMobile ? mobileDockIcons : dockIcons).map((icon) => {
             // Insert divider before the first icon with divider: true (only for desktop icons)
-            const showDivider = !isMobile && (icon as any).divider === true;
+            const showDivider = !isMobile && 'divider' in icon && icon.divider === true;
             // Check if this is the Finder icon
             const isFinder = icon.alt === "Finder";
             // Check if this is the Notes icon
