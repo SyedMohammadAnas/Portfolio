@@ -44,7 +44,7 @@ const MenuBar: React.FC = () => {
         {isMobile ? (
           // Mobile: Only show "Anas's Portfolio" text
           <span className="font-bold text-black underline font-mono text-xs">
-            Anas's Portfolio
+            Anas&apos;s Portfolio
           </span>
         ) : (
           // Desktop: Show Apple icon + full title
@@ -64,7 +64,7 @@ const MenuBar: React.FC = () => {
               }}
             />
             <span className="font-bold text-black underline font-mono text-sm">
-              Syed Mohammad Anas's Portfolio
+              Syed Mohammad Anas&apos;s Portfolio
             </span>
           </div>
         )}

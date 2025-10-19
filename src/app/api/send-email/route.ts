@@ -158,7 +158,7 @@ Received at: ${new Date().toLocaleString()}
     // Return success response
     return NextResponse.json(
       {
-        message: 'Email sent successfully! Thank you for your message. I\'ll get back to you soon.',
+        message: 'Email sent successfully! Thank you for your message. I&apos;ll get back to you soon.',
         success: true
       },
       { status: 200 }
