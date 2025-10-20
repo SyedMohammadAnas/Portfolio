@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Dock from "@/components/ui/Dock";
 import Image from "next/image";
 import ExplorerModal from "@/components/ui/ExplorerModal";
+import MacWindowModal from "@/components/ui/MacWindowModal";
 // Import the Starfield animated background
 import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor hook
 // Import the GridBackground component
@@ -15,6 +16,14 @@ import TextModifier from "@/components/ui/TextModifier";
 import { useResponsivePositioning, pxToVw, pxToVh } from "@/components/ui/useResponsivePositioning";
 // Import mobile detection hook
 import { useMobileDetection } from "@/components/ui/useMobileDetection";
+// Import images to get intrinsic sizes for exact-fit modals
+// Using direct imports to access width/height metadata
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - Next.js image import types
+import aboutMeImg1 from "../../public/SyedMohammadAnas/aboutMeModal1.png";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - Next.js image import types
+import aboutMeImg2 from "../../public/SyedMohammadAnas/aboutMeModal2.png";
 
 // Interface for modal state management
 interface ModalState {
@@ -176,7 +185,12 @@ export default function Home() {
       return;
     }
 
-    if (item.type === 'folder' && item.projectId) {
+    if (item.type === 'folder' && item.label === 'About Me') {
+      // Open the three About Me modals on desktop as well
+      setAboutModalOneOpen(true);
+      setAboutModalTwoOpen(true);
+      setAboutModalTextOpen(true);
+    } else if (item.type === 'folder' && item.projectId) {
       // Check if a modal for this project already exists
       const existingModal = modals.find(modal => modal.projectId === item.projectId);
 
@@ -206,6 +220,60 @@ export default function Home() {
     window.open(pdfUrl, '_blank');
   };
 
+  // -------------------------
+  // ABOUT ME: Three lightweight Mac-style modals (two images + one text)
+  // -------------------------
+  const [aboutModalOneOpen, setAboutModalOneOpen] = useState(false);
+  const [aboutModalTwoOpen, setAboutModalTwoOpen] = useState(false);
+  const [aboutModalTextOpen, setAboutModalTextOpen] = useState(false);
+
+  // Track viewport to fit image modals inside
+  const [viewport, setViewport] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  React.useEffect(() => {
+    const update = () => setViewport({ w: window.innerWidth, h: window.innerHeight });
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  // Fit an image into the viewport while keeping aspect ratio and adding safe margins
+  const getFittedSize = (origW: number, origH: number) => {
+    const vw = viewport.w || (typeof window !== 'undefined' ? window.innerWidth : 0);
+    const vh = viewport.h || (typeof window !== 'undefined' ? window.innerHeight : 0);
+    // Safe margins (account for menu/dock on mobile a bit more)
+    const marginW = isMobile ? 24 : 48;
+    const marginH = isMobile ? 200 : 140;
+    // Tight visual caps so windows feel small like the reference
+    const capW = isMobile ? vw * 0.72 : vw * 0.34;
+    const capH = isMobile ? vh * 0.40 : vh * 0.36;
+    const maxW = Math.max(160, Math.min(vw - marginW, capW));
+    const maxH = Math.max(140, Math.min(vh - marginH, capH));
+    const scale = Math.min(maxW / origW, maxH / origH, 1); // never upscale
+    const w = Math.floor(origW * scale);
+    const h = Math.floor(origH * scale);
+    return { w, h };
+  };
+
+  // Compute sizes for both images using intrinsic metadata
+  const aboutImg1Size = React.useMemo(() => getFittedSize(aboutMeImg1.width-52, aboutMeImg1.height), [viewport, isMobile]);
+  const aboutImg2Size = React.useMemo(() => getFittedSize(aboutMeImg2.width-110, aboutMeImg2.height), [viewport, isMobile]);
+
+  // Utility: compute window-centered positions with small offsets so windows are visible together
+  const getCenteredPosition = (width: number, height: number, offsetX = 0, offsetY = 0) => {
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 0;
+    const x = Math.max(0, (vw - width) / 2 + offsetX);
+    const y = Math.max(0, (vh - height) / 2 + offsetY);
+    return { x, y };
+  };
+
+  // Open all three About Me modals with staggered positions
+  const handleOpenAboutMe = () => {
+    setAboutModalOneOpen(true);
+    setAboutModalTwoOpen(true);
+    setAboutModalTextOpen(true);
+  };
+
   return (
     <>
       {/* MacOS-style Menu Bar */}
@@ -219,7 +287,7 @@ export default function Home() {
         <div
           className="fixed inset-0 w-full h-full -z-10 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/mobileBackground.png)',
+            backgroundImage: 'url(/mobileBackground2.png)',
           }}
           aria-hidden="true"
         />
@@ -232,27 +300,16 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center w-full h-full relative">
         {/* --- Animated Starfield Background Layer --- */}
 
-        {/* Centered Portfolio Title with TextModifier Effects, lifted up */}
-        <div
-          className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
-          style={{
-            marginTop: isMobile ? pxToVh(-36) : pxToVh(-72), // Reduced negative margin on mobile
-          }}
-        >
-          {/* Welcome text - smaller and positioned above, also lifted */}
-          <div style={{ marginTop: isMobile ? pxToVh(-400) : pxToVh(68) }}> {/* Further reduced margin on mobile - moved upward */}
-            {isMobile ? (
-              // Simple text for mobile - no special effects
-              <div
-                className="font-light tracking-wide text-4xl text-white"
-                style={{
-                  textShadow: '2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0px 2px 0px #000, 0px -2px 0px #000, 2px 0px 0px #000, -2px 0px 0px #000'
-                }}
-              >
-                welcome to my
-              </div>
-            ) : (
-              // TextModifier with special effects for desktop
+        {/* Centered Portfolio Title with TextModifier Effects, lifted up - hidden on mobile */}
+        {!isMobile && (
+          <div
+            className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
+            style={{
+              marginTop: pxToVh(-72)
+            }}
+          >
+            {/* Welcome text - smaller and positioned above, also lifted */}
+            <div style={{ marginTop: pxToVh(68) }}>
               <TextModifier
                 text="welcome to my"
                 className="font-light tracking-wide text-5xl"
@@ -263,23 +320,10 @@ export default function Home() {
                 animationSpeed={0.2}
                 proximityRadius={100}
               />
-            )}
-          </div>
+            </div>
 
-          {/* Main PORTFOLIO text - larger and more prominent, also lifted */}
-          <div className="flex items-center justify-center">
-            {isMobile ? (
-              // Simple text for mobile - no special effects
-              <div
-                className="font-extrabold tracking-wider text-6xl text-white"
-                style={{
-                  textShadow: '2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0px 2px 0px #000, 0px -2px 0px #000, 2px 0px 0px #000, -2px 0px 0px #000'
-                }}
-              >
-                PORTFOLIO.
-              </div>
-            ) : (
-              // TextModifier with special effects for desktop
+            {/* Main PORTFOLIO text - larger and more prominent, also lifted */}
+            <div className="flex items-center justify-center">
               <TextModifier
                 text="PORTFOLIO."
                 className="font-extrabold tracking-wider text-8xl"
@@ -290,9 +334,9 @@ export default function Home() {
                 animationSpeed={0.2}
                 proximityRadius={150}
               />
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* MOBILE-ONLY: Two standalone icons (About Me and SyedResume) rendered on-screen, not in Dock */}
         {isMobile && (
@@ -305,6 +349,7 @@ export default function Home() {
               type="button"
               className="flex flex-col items-center active:opacity-80 focus:outline-none"
               aria-label="About Me"
+              onClick={handleOpenAboutMe}
             >
               <div
                 className="w-[80px] h-[80px] flex items-center justify-center rounded-xl overflow-hidden"
@@ -321,7 +366,7 @@ export default function Home() {
                   style={{ width: '80px', height: '80px' }}
                 />
               </div>
-              <span className="mt-1 text-base font-bold text-white drop-shadow-sm">About Me</span>
+              <span className="mt-1 text-base font-bold text-black drop-shadow-sm">About Me</span>
             </button>
 
             {/* SyedResume (file icon) */}
@@ -346,7 +391,7 @@ export default function Home() {
                   style={{ width: '80px', height: '80px' }}
                 />
               </div>
-              <span className="mt-1 text-base font-bold text-white drop-shadow-sm">SyedResume</span>
+              <span className="mt-1 text-base font-bold text-black drop-shadow-sm">SyedResume.pdf</span>
             </button>
           </div>
         )}
@@ -469,6 +514,71 @@ export default function Home() {
             customZIndex={modal.zIndex}
           />
         ))}
+
+        {/* ABOUT ME: Modal 1 - Image with title "This is" */}
+        <MacWindowModal
+          isOpen={aboutModalOneOpen}
+          onClose={() => setAboutModalOneOpen(false)}
+          title="This is"
+          width={aboutImg1Size.w}
+          height={aboutImg1Size.h}
+          initialPosition={getCenteredPosition(aboutImg1Size.w, aboutImg1Size.h, -260, -60)}
+        >
+          {/* Image content: no extra padding/background; window should hug the image */}
+          <div className="w-full h-full flex items-center justify-center bg-transparent">
+            <Image
+              src="/SyedMohammadAnas/aboutMeModal1.png"
+              alt="About Me Photo 1"
+              width={aboutImg1Size.w}
+              height={aboutImg1Size.h}
+              className="object-contain w-full h-full"
+              priority
+            />
+          </div>
+        </MacWindowModal>
+
+        {/* ABOUT ME: Modal 2 - Image with title "Syed Mohammad Anas" */}
+        <MacWindowModal
+          isOpen={aboutModalTwoOpen}
+          onClose={() => setAboutModalTwoOpen(false)}
+          title="Syed Mohammad Anas"
+          width={aboutImg2Size.w}
+          height={aboutImg2Size.h}
+          initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, 0, 10)}
+        >
+          <div className="w-full h-full flex items-center justify-center bg-transparent">
+            <Image
+              src="/SyedMohammadAnas/aboutMeModal2.png"
+              alt="About Me Photo 2"
+              width={aboutImg2Size.w}
+              height={aboutImg2Size.h}
+              className="object-contain w-full h-full"
+              priority
+            />
+          </div>
+        </MacWindowModal>
+
+        {/* ABOUT ME: Modal 3 - Text file style with title "aboutMe.txt" */}
+        <MacWindowModal
+          isOpen={aboutModalTextOpen}
+          onClose={() => setAboutModalTextOpen(false)}
+          title="aboutMe.txt"
+          width={560}
+          height={360}
+          initialPosition={getCenteredPosition(560, 360, 240, 80)}
+        >
+          {/* Simple text-style content */}
+          <div className="w-full h-full p-4 text-sm leading-6 text-gray-800 font-medium bg-white">
+            <p>
+              Hi, I’m Syed Mohammad Anas — a frontend-focused developer who loves
+              crafting smooth, delightful user experiences with Next.js, TypeScript,
+              Tailwind, and Framer Motion. I enjoy building responsive, pixel-sharp
+              interfaces, paying attention to micro-interactions, performance, and
+              accessibility. Outside of code, I explore design, visuals, and small
+              life details that inspire creative UI.
+            </p>
+          </div>
+        </MacWindowModal>
       </div>
     </>
   );
