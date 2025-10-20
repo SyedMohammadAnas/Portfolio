@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Wifi, BatteryFull, Sun } from "lucide-react";
+import { Wifi, BatteryLow, Sun } from "lucide-react";
 import Image from "next/image";
 // Import responsive positioning utilities
 import { pxToVw, pxToVh } from "./useResponsivePositioning";
@@ -85,16 +85,16 @@ const MenuBar: React.FC = () => {
             <Wifi
               className="text-black"
               style={{
-                width: pxToVw(100),
-                height: pxToVh(100),
+                width: pxToVw(80),
+                height: pxToVh(80),
               }}
             />
             {/* Battery Icon */}
-            <BatteryFull
+            <BatteryLow
               className="text-black"
               style={{
-                width: pxToVw(100),
-                height: pxToVh(100),
+                width: pxToVw(80),
+                height: pxToVh(80),
               }}
             />
             {/* Time Only */}
@@ -122,7 +122,7 @@ const MenuBar: React.FC = () => {
                 height: pxToVh(20),
               }}
             />
-            <BatteryFull
+            <BatteryLow
               className="text-black"
               style={{
                 width: pxToVw(20),

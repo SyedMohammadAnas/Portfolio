@@ -199,6 +199,13 @@ export default function Home() {
     setSelectedProjectIds(prev => ({ ...prev, [modalId]: projectId }));
   };
 
+  // MOBILE-ONLY: open resume link in a new tab
+  // Keeping the URL consistent with desktop file behavior for "SyedResume.pdf"
+  const openResumeInNewTab = () => {
+    const pdfUrl = "https://docs.google.com/document/d/13hupz9yVdmgTIzqTdMkv8YybdTJGkZnJ/edit?usp=sharing&ouid=101811674702433936195&rtpof=true&sd=true";
+    window.open(pdfUrl, '_blank');
+  };
+
   return (
     <>
       {/* MacOS-style Menu Bar */}
@@ -286,6 +293,63 @@ export default function Home() {
             )}
           </div>
         </div>
+
+        {/* MOBILE-ONLY: Two standalone icons (About Me and SyedResume) rendered on-screen, not in Dock */}
+        {isMobile && (
+          <div
+            className="fixed left-7 top-10 z-30 flex flex-row items-center gap-5 select-none"
+            aria-label="Mobile quick icons"
+          >
+            {/* About Me (folder icon) */}
+            <button
+              type="button"
+              className="flex flex-col items-center active:opacity-80 focus:outline-none"
+              aria-label="About Me"
+            >
+              <div
+                className="w-[80px] h-[80px] flex items-center justify-center rounded-xl overflow-hidden"
+                style={{ width: '80px', height: '80px' }}
+              >
+                <Image
+                  src="/media/Icons/appleFolder.avif"
+                  alt="About Me"
+                  width={80}
+                  height={80}
+                  className="block w-full h-full object-contain object-center"
+                  quality={100}
+                  priority
+                  style={{ width: '80px', height: '80px' }}
+                />
+              </div>
+              <span className="mt-1 text-base font-bold text-white drop-shadow-sm">About Me</span>
+            </button>
+
+            {/* SyedResume (file icon) */}
+            <button
+              type="button"
+              onClick={openResumeInNewTab}
+              className="flex flex-col items-center active:opacity-80 focus:outline-none"
+              aria-label="Open Syed Resume"
+            >
+              <div
+                className="w-[80px] h-[80px] flex items-center justify-center rounded-xl overflow-hidden"
+                style={{ width: '80px', height: '80px' }}
+              >
+                <Image
+                  src="/media/Icons/paperLogo.avif"
+                  alt="Syed Resume"
+                  width={80}
+                  height={80}
+                  className="block w-full h-full object-contain object-center"
+                  quality={100}
+                  priority
+                  style={{ width: '80px', height: '80px' }}
+                />
+              </div>
+              <span className="mt-1 text-base font-bold text-white drop-shadow-sm">SyedResume</span>
+            </button>
+          </div>
+        )}
 
                 {/* Folders and Files (right side) */}
         <div
