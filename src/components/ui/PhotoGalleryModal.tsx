@@ -3,14 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useCursor } from "./useCursor"; // Import custom cursor hook
 
-// Placeholder images (Unsplash or similar)
+// Life dump photos from WhatsApp
 const IMAGES = [
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?auto=format&fit=crop&w=400&q=80",
+  "/lifeDumpPhotos/WhatsApp Image 2025-10-20 at 11.58.21 PM.jpeg",
+  "/lifeDumpPhotos/WhatsApp Image 2025-10-20 at 11.59.35 PM.jpeg",
+  "/lifeDumpPhotos/WhatsApp Image 2025-10-20 at 11.58.22 PM (2).jpeg",
+  "/lifeDumpPhotos/WhatsApp Image 2025-10-20 at 11.58.22 PM (1).jpeg",
+  "/lifeDumpPhotos/WhatsApp Image 2025-10-20 at 11.58.22 PM.jpeg",
+  "/lifeDumpPhotos/WhatsApp Image 2025-10-20 at 11.58.21 PM (1).jpeg",
+  "/lifeDumpPhotos/image.png",
 ];
 
 interface PhotoGalleryModalProps {
@@ -206,8 +207,8 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
                       key={`${src}-${idx}`}
                       className="absolute top-1/2 left-1/2"
                       style={{
-                        width: 200,
-                        height: 280,
+                        width: 230,
+                        height: 330,
                         x: '-50%',
                         y: '-50%',
                         zIndex,
@@ -225,8 +226,8 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
                       <Image
                         src={src}
                         alt={`Gallery ${idx + 1}`}
-                        width={200}
-                        height={280}
+                        width={250}
+                        height={350}
                         className="rounded-lg object-cover w-full h-full border border-gray-200 bg-white"
                         draggable={false}
                         style={{ userSelect: 'none', pointerEvents: 'auto' }}

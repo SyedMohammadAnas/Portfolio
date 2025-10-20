@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Mail, User, MessageSquare, FileText, Check, AlertCircle, Inbox, Trash2, Archive, Star, Plus } from "lucide-react";
 import { useCursor } from "./useCursor";
+import { useMobileDetection } from "./useMobileDetection";
 
 // Interface for form data
 interface EmailFormData {
@@ -38,6 +39,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
   customZIndex
 }) => {
   const setCursorType = useCursor();
+  const isMobile = useMobileDetection();
 
   // Form state management
   const [formData, setFormData] = useState<EmailFormData>({
@@ -245,7 +247,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
           <motion.div
             className="absolute rounded-lg shadow-2xl overflow-hidden border border-white/30 bg-white pointer-events-auto"
             style={{
-              width: '800px',
+              width: isMobile ? '95vw' : '800px',
               height: '500px',
               left: getInitialPosition().x,
               top: getInitialPosition().y,
@@ -260,7 +262,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
             dragConstraints={{
               left: -getInitialPosition().x,
               top: -getInitialPosition().y,
-              right: window.innerWidth - getInitialPosition().x - 800,
+              right: window.innerWidth - getInitialPosition().x - (isMobile ? window.innerWidth * 0.95 : 800),
               bottom: window.innerHeight - getInitialPosition().y - 500,
             }}
             dragElastic={0.1}
@@ -276,17 +278,18 @@ const EmailModal: React.FC<EmailModalProps> = ({
             {/* Layout: Sidebar (left) and Main compose area (right) - similar to ExplorerModal */}
             <div className="flex flex-row w-full h-full">
 
-              {/* Glassy left sidebar - inbox folders */}
-              <div
-                className="flex flex-col justify-start items-stretch w-48 h-full px-0 py-0 border-r border-white/40"
-                style={{
-                  background: "linear-gradient(to bottom, rgba(236,236,236,0.85) 60%, rgba(220,230,255,0.18) 100%)",
-                  backdropFilter: "blur(18px) saturate(1.5)",
-                  WebkitBackdropFilter: "blur(18px) saturate(1.5)",
-                  boxShadow: "2px 0 24px 0 rgba(0,0,0,0.10) inset",
-                  borderRight: "1.5px solid rgba(255,255,255,0.32)",
-                }}
-              >
+              {/* Glassy left sidebar - inbox folders - hidden on mobile */}
+              {!isMobile && (
+                <div
+                  className="flex flex-col justify-start items-stretch w-48 h-full px-0 py-0 border-r border-white/40"
+                  style={{
+                    background: "linear-gradient(to bottom, rgba(236,236,236,0.85) 60%, rgba(220,230,255,0.18) 100%)",
+                    backdropFilter: "blur(18px) saturate(1.5)",
+                    WebkitBackdropFilter: "blur(18px) saturate(1.5)",
+                    boxShadow: "2px 0 24px 0 rgba(0,0,0,0.10) inset",
+                    borderRight: "1.5px solid rgba(255,255,255,0.32)",
+                  }}
+                >
                 {/* Mac window controls at the top of sidebar - matching other modals */}
                 <div className="flex items-center gap-2 mt-3 mb-6 px-4">
                   <button
@@ -366,13 +369,44 @@ const EmailModal: React.FC<EmailModalProps> = ({
                     Portfolio Contact
                   </div>
                 </div>
-              </div>
+                </div>
+              )}
 
               {/* Main compose area - right side */}
               <div className="flex-1 flex flex-col h-full bg-white">
 
-                {/* Compose header */}
+                {/* Compose header with mobile window controls */}
                 <div className="flex items-center h-12 px-6 border-b border-gray-200 bg-gray-50">
+                  {/* Mobile window controls - only show on mobile */}
+                  {isMobile && (
+                    <div className="flex items-center gap-2 mr-4">
+                      <button
+                        aria-label="Close"
+                        onClick={handleClose}
+                        className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform"
+                        style={{ boxShadow: '0 1px 2px #0002' }}
+                        onMouseEnter={() => setCursorType("pointinghand")}
+                        onMouseLeave={() => setCursorType("normal")}
+                      />
+                      <button
+                        aria-label="Minimize"
+                        onClick={handleClose}
+                        className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform"
+                        style={{ boxShadow: '0 1px 2px #0002' }}
+                        onMouseEnter={() => setCursorType("pointinghand")}
+                        onMouseLeave={() => setCursorType("normal")}
+                      />
+                      <button
+                        aria-label="Maximize"
+                        onClick={handleClose}
+                        className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform"
+                        style={{ boxShadow: '0 1px 2px #0002' }}
+                        onMouseEnter={() => setCursorType("pointinghand")}
+                        onMouseLeave={() => setCursorType("normal")}
+                      />
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-2">
                     <Mail className="w-5 h-5 text-blue-600" />
                     <h2 className="text-lg font-semibold text-gray-800">New Message</h2>

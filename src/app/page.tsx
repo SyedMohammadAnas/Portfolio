@@ -256,7 +256,7 @@ export default function Home() {
 
   // Compute sizes for both images using intrinsic metadata
   const aboutImg1Size = React.useMemo(() => getFittedSize(aboutMeImg1.width-52, aboutMeImg1.height), [viewport, isMobile]);
-  const aboutImg2Size = React.useMemo(() => getFittedSize(aboutMeImg2.width-110, aboutMeImg2.height), [viewport, isMobile]);
+  const aboutImg2Size = React.useMemo(() => getFittedSize(aboutMeImg2.width-133, aboutMeImg2.height), [viewport, isMobile]);
 
   // Utility: compute window-centered positions with small offsets so windows are visible together
   const getCenteredPosition = (width: number, height: number, offsetX = 0, offsetY = 0) => {
@@ -366,7 +366,7 @@ export default function Home() {
                   style={{ width: '80px', height: '80px' }}
                 />
               </div>
-              <span className="mt-1 text-base font-bold text-black drop-shadow-sm">About Me</span>
+              <span className="mt-1 text-sm font-bold text-black drop-shadow-sm">About Me</span>
             </button>
 
             {/* SyedResume (file icon) */}
@@ -391,7 +391,7 @@ export default function Home() {
                   style={{ width: '80px', height: '80px' }}
                 />
               </div>
-              <span className="mt-1 text-base font-bold text-black drop-shadow-sm">SyedResume.pdf</span>
+              <span className="mt-1 text-sm font-bold text-black drop-shadow-sm">SyedResume.pdf</span>
             </button>
           </div>
         )}
@@ -544,7 +544,7 @@ export default function Home() {
           title="Syed Mohammad Anas"
           width={aboutImg2Size.w}
           height={aboutImg2Size.h}
-          initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, 0, 10)}
+          initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, 60, -60)}
         >
           <div className="w-full h-full flex items-center justify-center bg-transparent">
             <Image
@@ -563,19 +563,19 @@ export default function Home() {
           isOpen={aboutModalTextOpen}
           onClose={() => setAboutModalTextOpen(false)}
           title="aboutMe.txt"
-          width={560}
+          width={260}
           height={360}
-          initialPosition={getCenteredPosition(560, 360, 240, 80)}
+          initialPosition={getCenteredPosition(560, 360, 140, 80)}
         >
           {/* Simple text-style content */}
           <div className="w-full h-full p-4 text-sm leading-6 text-gray-800 font-medium bg-white">
             <p>
-              Hi, I’m Syed Mohammad Anas — a frontend-focused developer who loves
-              crafting smooth, delightful user experiences with Next.js, TypeScript,
-              Tailwind, and Framer Motion. I enjoy building responsive, pixel-sharp
-              interfaces, paying attention to micro-interactions, performance, and
-              accessibility. Outside of code, I explore design, visuals, and small
-              life details that inspire creative UI.
+              Hi, I’m <b><u>Syed Mohammad Anas</u></b> — a frontend-focused developer who loves
+              crafting smooth, delightful user experiences with <b>Next.js</b>, <b>TypeScript</b>,
+              <b>Tailwind</b>, and <b>Framer Motion</b>. I enjoy building responsive, pixel-sharp
+              interfaces, paying attention to <b>micro-interactions</b>, <b>performance</b>, and
+              <b> accessibility</b>. Outside of code, I explore <b>design</b>, <b>visuals</b>, and <b>quality of
+              life details</b> that inspire creative UI.
             </p>
           </div>
         </MacWindowModal>

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useCursor } from "./useCursor"; // Import custom cursor hook
+import { useMobileDetection } from "./useMobileDetection"; // Import mobile detection hook
 
 // Placeholder icons for random assignment
 const ICONS = [
@@ -105,6 +106,9 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
   initialPosition,
   customZIndex,
 }) => {
+  // Get mobile detection state
+  const isMobile = useMobileDetection();
+
   // Trap focus inside modal when open
   const modalRef = useRef<HTMLDivElement>(null);
   // Ref for modal container to calculate drag constraints
@@ -125,7 +129,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
 
   // Calculate initial position for the modal
   const getInitialPosition = (): { x: number; y: number } => {
-    const modalWidth = 620; // Modal width in pixels
+    const modalWidth = isMobile ? window.innerWidth * 0.9 : 500; // Reduced width: 90vw mobile, 500px desktop
     const modalHeight = 350; // Modal height in pixels
 
     if (initialPosition) {
@@ -213,7 +217,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
           <motion.div
             className="absolute rounded-lg shadow-2xl overflow-hidden border border-white/30 bg-white pointer-events-auto"
             style={{
-              width: '620px',
+              width: isMobile ? '105vw' : '620px',
               height: '350px',
               left: getInitialPosition().x,
               top: getInitialPosition().y,
@@ -228,7 +232,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
             dragConstraints={{
               left: -getInitialPosition().x,
               top: -getInitialPosition().y,
-              right: window.innerWidth - getInitialPosition().x - 620,
+              right: window.innerWidth - getInitialPosition().x - (isMobile ? window.innerWidth * 0.9 : 500),
               bottom: window.innerHeight - getInitialPosition().y - 350,
             }}
             dragElastic={0.1}
