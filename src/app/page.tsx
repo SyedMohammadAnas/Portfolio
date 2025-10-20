@@ -40,7 +40,7 @@ export default function Home() {
       return []; // Return empty array for mobile - no folder icons
     }
     return [
-      { id: 1, label: "Project 02", icon: "/media/Icons/appleFolder.avif", x: -450, y: 0, z: 1, type: 'folder', projectId: 2 },
+      { id: 1, label: "Project 2", icon: "/media/Icons/appleFolder.avif", x: -450, y: 0, z: 1, type: 'folder', projectId: 2 },
       { id: 2, label: "Project 01", icon: "/media/Icons/appleFolder.avif", x: -270, y: 120, z: 1, type: 'folder', projectId: 1 },
       { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -500, y: 270, z: 1, type: 'folder', projectId: 3 },
       { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: -10, y: 360, z: 1, type: 'trash' },
