@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { CursorContext } from "./CursorContext";
+import { useMobileDetection } from "./useMobileDetection";
 
 // Cursor SVG paths
 const cursorSVGs = {

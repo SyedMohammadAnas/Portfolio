@@ -42,9 +42,9 @@ const MenuBar: React.FC = () => {
       {/* Left: Portfolio Title Only on Mobile */}
       <div className="flex items-center font-bold text-black">
         {isMobile ? (
-          // Mobile: Only show "Anas's Portfolio" text
+          // Mobile: Only show "Syed Anas's Portfolio" text
           <span className="font-bold text-black underline font-mono text-xs">
-            Anas&apos;s Portfolio
+            Syed Anas&apos;s Portfolio
           </span>
         ) : (
           // Desktop: Show Apple icon + full title
@@ -85,21 +85,21 @@ const MenuBar: React.FC = () => {
             <Wifi
               className="text-black"
               style={{
-                width: pxToVw(16),
-                height: pxToVh(16),
+                width: pxToVw(100),
+                height: pxToVh(100),
               }}
             />
             {/* Battery Icon */}
             <BatteryFull
               className="text-black"
               style={{
-                width: pxToVw(16),
-                height: pxToVh(16),
+                width: pxToVw(100),
+                height: pxToVh(100),
               }}
             />
             {/* Time Only */}
             <span
-              className="font-mono text-black text-xs"
+              className="font-mono text-black text-md"
               style={{ marginLeft: pxToVw(2) }}
             >
               {time}

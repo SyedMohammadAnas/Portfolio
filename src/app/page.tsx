@@ -204,11 +204,22 @@ export default function Home() {
       {/* MacOS-style Menu Bar */}
       <MenuBar />
 
-      {/* Beige background for the entire screen */}
+      {/* Background for the entire screen */}
       <div className="fixed inset-0 w-full h-full bg-[#EDE8D0] -z-20" aria-hidden="true" />
 
-      {/* Grid Background Layer (on top of beige background) */}
-      <GridBackground />
+      {/* Mobile Background Image - only show on mobile */}
+      {isMobile && (
+        <div
+          className="fixed inset-0 w-full h-full -z-10 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/mobileBackground.png)',
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Grid Background Layer (on top of beige background) - hide on mobile */}
+      {!isMobile && <GridBackground />}
 
 
       <div className="flex flex-col items-center justify-center w-full h-full relative">
@@ -226,7 +237,7 @@ export default function Home() {
             {isMobile ? (
               // Simple text for mobile - no special effects
               <div
-                className="font-light tracking-wide text-4xl text-black"
+                className="font-light tracking-wide text-4xl text-white"
               >
                 welcome to my
               </div>
@@ -250,7 +261,7 @@ export default function Home() {
             {isMobile ? (
               // Simple text for mobile - no special effects
               <div
-                className="font-extrabold tracking-wider text-6xl text-black"
+                className="font-extrabold tracking-wider text-6xl text-white"
               >
                 PORTFOLIO.
               </div>
