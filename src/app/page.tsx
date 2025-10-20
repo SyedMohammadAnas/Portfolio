@@ -233,11 +233,14 @@ export default function Home() {
           }}
         >
           {/* Welcome text - smaller and positioned above, also lifted */}
-          <div style={{ marginTop: isMobile ? pxToVh(34) : pxToVh(68) }}> {/* Reduced margin on mobile */}
+          <div style={{ marginTop: isMobile ? pxToVh(-400) : pxToVh(68) }}> {/* Further reduced margin on mobile - moved upward */}
             {isMobile ? (
               // Simple text for mobile - no special effects
               <div
                 className="font-light tracking-wide text-4xl text-white"
+                style={{
+                  textShadow: '2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0px 2px 0px #000, 0px -2px 0px #000, 2px 0px 0px #000, -2px 0px 0px #000'
+                }}
               >
                 welcome to my
               </div>
@@ -262,6 +265,9 @@ export default function Home() {
               // Simple text for mobile - no special effects
               <div
                 className="font-extrabold tracking-wider text-6xl text-white"
+                style={{
+                  textShadow: '2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0px 2px 0px #000, 0px -2px 0px #000, 2px 0px 0px #000, -2px 0px 0px #000'
+                }}
               >
                 PORTFOLIO.
               </div>

@@ -15,17 +15,27 @@ const cursorSVGs = {
 const CustomCursor: React.FC = () => {
   // Get cursor type from context
   const { cursorType } = useContext(CursorContext);
+  // Get mobile detection state
+  const isMobile = useMobileDetection();
   // Mouse position state
   const [pos, setPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Mouse move handler
-    const handleMouseMove = (e: MouseEvent) => {
-      setPos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+    // Only add mouse event listeners on desktop
+    if (!isMobile) {
+      // Mouse move handler
+      const handleMouseMove = (e: MouseEvent) => {
+        setPos({ x: e.clientX, y: e.clientY });
+      };
+      window.addEventListener("mousemove", handleMouseMove);
+      return () => window.removeEventListener("mousemove", handleMouseMove);
+    }
+  }, [isMobile]);
+
+  // Don't render custom cursor on mobile devices
+  if (isMobile) {
+    return null;
+  }
 
   // Choose SVG based on cursorType
   const svgSrc = cursorSVGs[cursorType] || cursorSVGs.normal;
