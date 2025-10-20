@@ -287,7 +287,7 @@ export default function Home() {
         <div
           className="fixed inset-0 w-full h-full -z-10 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/mobileBackground2.png)',
+            backgroundImage: 'url(/backgroundImages/mobileBackground2.png)',
           }}
           aria-hidden="true"
         />
