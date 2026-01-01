@@ -78,6 +78,16 @@ const Dock: React.FC = () => {
   // State for maps modal position
   const [mapsPosition, setMapsPosition] = useState({ x: 0, y: 0 });
 
+  // Z-index management for all modals
+  const [modalZIndices, setModalZIndices] = useState({
+    explorer: 101,
+    gallery: 101,
+    spotify: 101,
+    visitingCard: 101,
+    email: 101,
+    maps: 101,
+  });
+
   // Function to generate random position within viewport bounds
   const generateRandomPosition = (modalWidth: number, modalHeight: number) => {
     const padding = 50; // Minimum distance from edges for better UX
@@ -103,12 +113,14 @@ const Dock: React.FC = () => {
       setModalPosition(generateRandomPosition(620, 350)); // ExplorerModal dimensions
       setExplorerModalOpen(true);
     }
+    bringModalToFront('explorer');
   };
 
   // Handler to open photo gallery modal with random position
   const handleOpenGallery = () => {
     setGalleryPosition(generateRandomPosition(700, 420)); // PhotoGalleryModal dimensions
     setGalleryOpen(true);
+    bringModalToFront('gallery');
   };
 
   // Handler to toggle Spotify embed
@@ -126,6 +138,7 @@ const Dock: React.FC = () => {
     if (!emailModalOpen) {
       setEmailPosition(generateRandomPosition(800, 500)); // EmailModal dimensions
       setEmailModalOpen(true);
+      bringModalToFront('email');
     } else {
       setEmailModalOpen(false);
     }
@@ -136,6 +149,7 @@ const Dock: React.FC = () => {
     if (!mapsModalOpen) {
       setMapsPosition(generateRandomPosition(900, 600)); // MapsModal dimensions
       setMapsModalOpen(true);
+      bringModalToFront('maps');
     } else {
       setMapsModalOpen(false);
     }
@@ -146,26 +160,49 @@ const Dock: React.FC = () => {
     setStickyNoteOpen(!stickyNoteOpen);
   };
 
+  // Function to bring modal to front (update z-index)
+  const bringModalToFront = (modalType: keyof typeof modalZIndices) => {
+    setModalZIndices(prev => {
+      const maxZIndex = Math.max(...Object.values(prev));
+      return {
+        ...prev,
+        [modalType]: maxZIndex + 1
+      };
+    });
+  };
+
   return (
     <>
       {/* Render ExplorerModal if open, pass all required props */}
-      <ExplorerModal
-        isOpen={explorerModalOpen}
-        onClose={() => setExplorerModalOpen(false)}
-        selectedProjectId={selectedProjectId}
-        onSelectProject={handleSelectProject}
-        initialPosition={modalPosition}
-      />
+      <div
+        onMouseDown={() => bringModalToFront('explorer')}
+        onClick={() => bringModalToFront('explorer')}
+      >
+        <ExplorerModal
+          isOpen={explorerModalOpen}
+          onClose={() => setExplorerModalOpen(false)}
+          selectedProjectId={selectedProjectId}
+          onSelectProject={handleSelectProject}
+          initialPosition={modalPosition}
+          customZIndex={modalZIndices.explorer}
+        />
+      </div>
       {/* Render StickyNote if open */}
       {stickyNoteOpen && (
         <StickyNote onClose={() => setStickyNoteOpen(false)} />
       )}
       {/* Render PhotoGalleryModal if open */}
-      <PhotoGalleryModal
-        isOpen={galleryOpen}
-        onClose={() => setGalleryOpen(false)}
-        initialPosition={galleryPosition}
-      />
+      <div
+        onMouseDown={() => bringModalToFront('gallery')}
+        onClick={() => bringModalToFront('gallery')}
+      >
+        <PhotoGalleryModal
+          isOpen={galleryOpen}
+          onClose={() => setGalleryOpen(false)}
+          initialPosition={galleryPosition}
+          customZIndex={modalZIndices.gallery}
+        />
+      </div>
 
       {/* Render SpotifyEmbed component */}
       <SpotifyEmbed
@@ -180,18 +217,30 @@ const Dock: React.FC = () => {
       />
 
       {/* Render EmailModal component */}
-      <EmailModal
-        isOpen={emailModalOpen}
-        onClose={() => setEmailModalOpen(false)}
-        initialPosition={emailPosition}
-      />
+      <div
+        onMouseDown={() => bringModalToFront('email')}
+        onClick={() => bringModalToFront('email')}
+      >
+        <EmailModal
+          isOpen={emailModalOpen}
+          onClose={() => setEmailModalOpen(false)}
+          initialPosition={emailPosition}
+          customZIndex={modalZIndices.email}
+        />
+      </div>
 
       {/* Render MapsModal component */}
-      <MapsModal
-        isOpen={mapsModalOpen}
-        onClose={() => setMapsModalOpen(false)}
-        initialPosition={mapsPosition}
-      />
+      <div
+        onMouseDown={() => bringModalToFront('maps')}
+        onClick={() => bringModalToFront('maps')}
+      >
+        <MapsModal
+          isOpen={mapsModalOpen}
+          onClose={() => setMapsModalOpen(false)}
+          initialPosition={mapsPosition}
+          customZIndex={modalZIndices.maps}
+        />
+      </div>
 
       <div
         className="fixed left-1/2 bottom-0 -translate-x-1/2 z-50 flex items-end"

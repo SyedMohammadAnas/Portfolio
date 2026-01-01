@@ -85,6 +85,8 @@ interface ExplorerModalProps {
   initialPosition?: { x: number; y: number };
   // Optional custom z-index for modal stacking
   customZIndex?: number;
+  // Optional flag to indicate if this modal should display certificates instead of project files
+  isCertificates?: boolean;
 }
 
 /**
@@ -105,6 +107,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
   onSelectProject,
   initialPosition,
   customZIndex,
+  isCertificates,
 }) => {
   // Get mobile detection state
   const isMobile = useMobileDetection();
@@ -201,27 +204,22 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] pointer-events-none"
+          className="fixed inset-0 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           tabIndex={-1}
           ref={modalRef}
         >
-          {/* Overlay: covers the whole screen for visual effect */}
-          <div
-            className="fixed inset-0 bg-black/10 pointer-events-none"
-            style={{ zIndex: 100 }}
-          />
           {/* Draggable modal container positioned at custom location */}
           <motion.div
-            className="absolute rounded-lg shadow-2xl overflow-hidden border border-white/30 bg-white pointer-events-auto"
+            className="absolute rounded-lg overflow-hidden border border-white/30 bg-white pointer-events-auto"
             style={{
               width: isMobile ? '105vw' : '620px',
               height: '350px',
               left: getInitialPosition().x,
               top: getInitialPosition().y,
-              boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)",
+              boxShadow: "0 20px 60px 0 rgba(0, 0, 0, 0.4), 0 10px 30px 0 rgba(0, 0, 0, 0.3), 0 5px 15px 0 rgba(0, 0, 0, 0.2)",
               zIndex: customZIndex || 101 // Use custom z-index if provided, otherwise default to 101
             }}
             initial={{ scale: 0.96, opacity: 0 }}

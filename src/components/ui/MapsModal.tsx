@@ -100,19 +100,13 @@ const MapsModal: React.FC<MapsModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] pointer-events-none"
+          className="fixed inset-0 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           tabIndex={-1}
           ref={modalRef}
         >
-          {/* Overlay: covers the whole screen for visual effect - matching other modals */}
-          <div
-            className="fixed inset-0 bg-black/10 pointer-events-none"
-            style={{ zIndex: 100 }}
-          />
-
           {/* Draggable modal container positioned at custom location - matching other modals */}
           <motion.div
             className="absolute rounded-lg shadow-2xl overflow-hidden border border-white/30 bg-white pointer-events-auto"

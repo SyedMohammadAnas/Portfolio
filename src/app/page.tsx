@@ -8,8 +8,6 @@ import ExplorerModal from "@/components/ui/ExplorerModal";
 import MacWindowModal from "@/components/ui/MacWindowModal";
 // Import the Starfield animated background
 import { useCursor } from "@/components/ui/useCursor"; // Import custom cursor hook
-// Import the GridBackground component
-import GridBackground from "@/components/ui/GridBackground";
 // Import the TextModifier component for interactive text effects
 import TextModifier from "@/components/ui/TextModifier";
 // Import responsive positioning hook
@@ -248,6 +246,23 @@ export default function Home() {
   const [aboutModalTwoOpen, setAboutModalTwoOpen] = useState(false);
   const [aboutModalTextOpen, setAboutModalTextOpen] = useState(false);
 
+  // Z-index management for About Me modals
+  const [aboutModalOneZIndex, setAboutModalOneZIndex] = useState(121);
+  const [aboutModalTwoZIndex, setAboutModalTwoZIndex] = useState(122);
+  const [aboutModalTextZIndex, setAboutModalTextZIndex] = useState(123);
+
+  // Function to bring About Me modal to front
+  const bringAboutModalToFront = (modalType: 'one' | 'two' | 'text') => {
+    const maxZ = Math.max(aboutModalOneZIndex, aboutModalTwoZIndex, aboutModalTextZIndex);
+    if (modalType === 'one' && aboutModalOneZIndex < maxZ) {
+      setAboutModalOneZIndex(maxZ + 1);
+    } else if (modalType === 'two' && aboutModalTwoZIndex < maxZ) {
+      setAboutModalTwoZIndex(maxZ + 1);
+    } else if (modalType === 'text' && aboutModalTextZIndex < maxZ) {
+      setAboutModalTextZIndex(maxZ + 1);
+    }
+  };
+
   // Track viewport to fit image modals inside
   const [viewport, setViewport] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
   React.useEffect(() => {
@@ -314,8 +329,16 @@ export default function Home() {
         />
       )}
 
-      {/* Grid Background Layer (on top of beige background) - hide on mobile */}
-      {!isMobile && <GridBackground />}
+      {/* Desktop/PC Background Image - only show on desktop */}
+      {!isMobile && (
+        <div
+          className="fixed inset-0 w-full h-full -z-10 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/backgroundImages/pcBackground.jpg)',
+          }}
+          aria-hidden="true"
+        />
+      )}
 
 
       <div className="flex flex-col items-center justify-center w-full h-full relative">
@@ -333,7 +356,7 @@ export default function Home() {
             <div style={{ marginTop: pxToVh(68) }}>
               <TextModifier
                 text="welcome to my"
-                className="font-light tracking-wide text-5xl"
+                className="font-light tracking-wide text-6xl text-white"
                 baseWeight={400}
                 maxWeight={900}
                 maxScale={1.3}
@@ -347,7 +370,7 @@ export default function Home() {
             <div className="flex items-center justify-center">
               <TextModifier
                 text="PORTFOLIO."
-                className="font-extrabold tracking-wider text-8xl"
+                className="font-extrabold tracking-wider text-9xl text-white"
                 baseWeight={400}
                 maxWeight={900}
                 maxScale={1.3}
@@ -363,7 +386,7 @@ export default function Home() {
         {isMobile && (
           <div
             className="fixed left-7 top-10 z-30 flex flex-row items-center gap-5 select-none"
-            aria-label="Mobile quick icons"
+            aria-label="Mobile quick icons" 
           >
             {/* About Me (folder icon) */}
             <button
@@ -502,11 +525,11 @@ export default function Home() {
                     )}
                   </AnimatePresence>
                   <span
-                    className={`text-center select-none rounded-sm z-10 drop-shadow-sm ${
+                    className={`text-center select-none rounded-sm z-10 drop-shadow-lg font-bold ${
                       isMobile ? 'text-xs' : 'text-sm'
-                    } ${hoveredId === item.id ? 'text-white' : 'text-black'}`}
+                    } ${hoveredId === item.id ? 'text-white' : 'text-white'}`}
                     style={{
-                      textShadow: hoveredId === item.id ? '0 1px 2px #007aff, 0 0px 8px #0002' : '0 1px 2px #fff, 0 0px 8px #0002',
+                      textShadow: hoveredId === item.id ? '0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.9)' : '0 2px 4px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.8)',
                       position: 'relative',
                       marginTop: pxToVh(4), // Convert mt-1 (4px) to viewport height units
                       padding: `0 ${pxToVw(4)}`, // Convert px-1 (4px) to viewport width units
@@ -525,82 +548,105 @@ export default function Home() {
 
         {/* Multiple Explorer Modals - render all open modals */}
         {modals.map((modal) => (
-          <ExplorerModal
+          <div
             key={modal.id}
-            isOpen={modal.isOpen}
-            onClose={() => closeModal(modal.id)}
-            selectedProjectId={selectedProjectIds[modal.id] || modal.projectId}
-            onSelectProject={(projectId) => handleProjectSelection(modal.id, projectId)}
-            initialPosition={modal.position}
-            customZIndex={modal.zIndex}
-            isCertificates={modal.isCertificates}
-          />
+            onMouseDown={() => bringModalToFront(modal.id)}
+            onClick={() => bringModalToFront(modal.id)}
+          >
+            <ExplorerModal
+              isOpen={modal.isOpen}
+              onClose={() => closeModal(modal.id)}
+              selectedProjectId={selectedProjectIds[modal.id] || modal.projectId}
+              onSelectProject={(projectId) => handleProjectSelection(modal.id, projectId)}
+              initialPosition={modal.position}
+              customZIndex={modal.zIndex}
+              isCertificates={modal.isCertificates}
+            />
+          </div>
         ))}
 
         {/* ABOUT ME: Modal 1 - Image with title "This is" */}
-        <MacWindowModal
-          isOpen={aboutModalOneOpen}
-          onClose={() => setAboutModalOneOpen(false)}
-          title="This is"
-          width={aboutImg1Size.w}
-          height={aboutImg1Size.h}
-          initialPosition={getCenteredPosition(aboutImg1Size.w, aboutImg1Size.h, -260, -60)}
+        <div
+          onMouseDown={() => bringAboutModalToFront('one')}
+          onClick={() => bringAboutModalToFront('one')}
         >
-          {/* Image content: no extra padding/background; window should hug the image */}
-          <div className="w-full h-full flex items-center justify-center bg-transparent">
-            <Image
-              src="/SyedMohammadAnas/aboutMeModal1.png"
-              alt="About Me Photo 1"
-              width={aboutImg1Size.w}
-              height={aboutImg1Size.h}
-              className="object-contain w-full h-full"
-              priority
-            />
-          </div>
-        </MacWindowModal>
+          <MacWindowModal
+            isOpen={aboutModalOneOpen}
+            onClose={() => setAboutModalOneOpen(false)}
+            title="This is"
+            width={aboutImg1Size.w}
+            height={aboutImg1Size.h}
+            initialPosition={getCenteredPosition(aboutImg1Size.w, aboutImg1Size.h, -260, -60)}
+            customZIndex={aboutModalOneZIndex}
+          >
+            {/* Image content: no extra padding/background; window should hug the image */}
+            <div className="w-full h-full flex items-center justify-center bg-transparent">
+              <Image
+                src="/SyedMohammadAnas/aboutMeModal1.png"
+                alt="About Me Photo 1"
+                width={aboutImg1Size.w}
+                height={aboutImg1Size.h}
+                className="object-contain w-full h-full"
+                priority
+              />
+            </div>
+          </MacWindowModal>
+        </div>
 
         {/* ABOUT ME: Modal 2 - Image with title "Syed Mohammad Anas" */}
-        <MacWindowModal
-          isOpen={aboutModalTwoOpen}
-          onClose={() => setAboutModalTwoOpen(false)}
-          title="Syed Mohammad Anas"
-          width={aboutImg2Size.w}
-          height={aboutImg2Size.h}
-          initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, 60, -60)}
+        <div
+          onMouseDown={() => bringAboutModalToFront('two')}
+          onClick={() => bringAboutModalToFront('two')}
         >
-          <div className="w-full h-full flex items-center justify-center bg-transparent">
-            <Image
-              src="/SyedMohammadAnas/aboutMeModal2.png"
-              alt="About Me Photo 2"
-              width={aboutImg2Size.w}
-              height={aboutImg2Size.h}
-              className="object-contain w-full h-full"
-              priority
-            />
-          </div>
-        </MacWindowModal>
+          <MacWindowModal
+            isOpen={aboutModalTwoOpen}
+            onClose={() => setAboutModalTwoOpen(false)}
+            title="Syed Mohammad Anas"
+            width={aboutImg2Size.w}
+            height={aboutImg2Size.h}
+            initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, 60, -60)}
+            customZIndex={aboutModalTwoZIndex}
+          >
+            <div className="w-full h-full flex items-center justify-center bg-transparent">
+              <Image
+                src="/SyedMohammadAnas/aboutMeModal2.png"
+                alt="About Me Photo 2"
+                width={aboutImg2Size.w}
+                height={aboutImg2Size.h}
+                className="object-contain w-full h-full"
+                priority
+              />
+            </div>
+          </MacWindowModal>
+        </div>
 
         {/* ABOUT ME: Modal 3 - Text file style with title "aboutMe.txt" */}
-        <MacWindowModal
-          isOpen={aboutModalTextOpen}
-          onClose={() => setAboutModalTextOpen(false)}
-          title="aboutMe.txt"
-          width={260}
-          height={360}
-          initialPosition={getCenteredPosition(560, 360, 140, 80)}
+        <div
+          onMouseDown={() => bringAboutModalToFront('text')}
+          onClick={() => bringAboutModalToFront('text')}
         >
-          {/* Simple text-style content */}
-          <div className="w-full h-full p-4 text-sm leading-6 text-gray-800 font-medium bg-white">
-            <p>
-              Hi, I’m <b><u>Syed Mohammad Anas</u></b> — a frontend-focused developer who loves
-              crafting smooth, delightful user experiences with <b>Next.js</b>, <b>TypeScript</b>,
-              <b>Tailwind</b>, and <b>Framer Motion</b>. I enjoy building responsive, pixel-sharp
-              interfaces, paying attention to <b>micro-interactions</b>, <b>performance</b>, and
-              <b> accessibility</b>. Outside of code, I explore <b>design</b>, <b>visuals</b>, and <b>quality of
-              life details</b> that inspire creative UI.
-            </p>
-          </div>
-        </MacWindowModal>
+          <MacWindowModal
+            isOpen={aboutModalTextOpen}
+            onClose={() => setAboutModalTextOpen(false)}
+            title="aboutMe.txt"
+            width={260}
+            height={360}
+            initialPosition={getCenteredPosition(560, 360, 140, 80)}
+            customZIndex={aboutModalTextZIndex}
+          >
+            {/* Simple text-style content */}
+            <div className="w-full h-full p-4 text-sm leading-6 text-gray-800 font-medium bg-white">
+              <p>
+                Hi, I&apos;m <b><u>Syed Mohammad Anas</u></b> — a frontend-focused developer who loves
+                crafting smooth, delightful user experiences with <b>Next.js</b>, <b>TypeScript</b>,
+                <b>Tailwind</b>, and <b>Framer Motion</b>. I enjoy building responsive, pixel-sharp
+                interfaces, paying attention to <b>micro-interactions</b>, <b>performance</b>, and
+                <b> accessibility</b>. Outside of code, I explore <b>design</b>, <b>visuals</b>, and <b>quality of
+                life details</b> that inspire creative UI.
+              </p>
+            </div>
+          </MacWindowModal>
+        </div>
       </div>
     </>
   );

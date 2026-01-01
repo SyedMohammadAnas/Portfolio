@@ -19,6 +19,8 @@ interface PhotoGalleryModalProps {
   onClose: () => void;
   // Optional custom initial position for the modal
   initialPosition?: { x: number; y: number };
+  // Optional custom z-index for modal stacking
+  customZIndex?: number;
 }
 
 /**
@@ -27,7 +29,7 @@ interface PhotoGalleryModalProps {
  * - 3D coverflow slider using Framer Motion
  * - Closes on window controls or outside click
  */
-const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, initialPosition }) => {
+const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, initialPosition, customZIndex }) => {
   // Current index in the slider
   const [current, setCurrent] = useState(2);
   const setCursorType = useCursor(); // Get cursor setter
@@ -93,16 +95,11 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] pointer-events-none"
+          className="fixed inset-0 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Overlay: covers the whole screen for visual effect */}
-          <div
-            className="fixed inset-0 bg-black/10 pointer-events-none"
-            style={{ zIndex: 100 }}
-          />
           {/* Modal window */}
           <motion.div
             className="absolute bg-white rounded-xl shadow-2xl w-[700px] max-w-[98vw] h-[420px] max-h-[90vh] flex flex-col items-center overflow-hidden pointer-events-auto"
@@ -111,7 +108,7 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
             exit={{ scale: 0.97, opacity: 0 }}
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
             style={{
-              zIndex: 101,
+              zIndex: customZIndex || 101,
               left: getInitialPosition().x,
               top: getInitialPosition().y
             }}

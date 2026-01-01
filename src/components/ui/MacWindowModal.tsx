@@ -9,6 +9,7 @@ interface MacWindowModalProps {
   width?: number; // Optional width in px (defaults to 620)
   height?: number; // Optional height in px (defaults to 360)
   initialPosition?: { x: number; y: number }; // Optional position for stacking
+  customZIndex?: number; // Optional custom z-index for modal stacking
   children: React.ReactNode; // Modal body content
 }
 
@@ -20,6 +21,7 @@ const MacWindowModal: React.FC<MacWindowModalProps> = ({
   width = 620,
   height = 360,
   initialPosition,
+  customZIndex,
   children,
 }) => {
   const setCursorType = useCursor(); // Custom cursor handler
@@ -72,8 +74,15 @@ const MacWindowModal: React.FC<MacWindowModalProps> = ({
         <>
           {/* Window container (no backdrop overlay) */}
           <motion.div
-            className="absolute bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
-            style={{ width, height, left: getInitialPosition().x, top: getInitialPosition().y, zIndex: 121 }}
+            className="absolute bg-white rounded-xl flex flex-col overflow-hidden pointer-events-auto"
+            style={{
+              width,
+              height,
+              left: getInitialPosition().x,
+              top: getInitialPosition().y,
+              zIndex: customZIndex || 121,
+              boxShadow: "0 20px 60px 0 rgba(0, 0, 0, 0.4), 0 10px 30px 0 rgba(0, 0, 0, 0.3), 0 5px 15px 0 rgba(0, 0, 0, 0.2)"
+            }}
             initial={{ scale: 0.98, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.98, opacity: 0 }}
