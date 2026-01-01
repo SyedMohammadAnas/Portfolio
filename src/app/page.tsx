@@ -32,6 +32,8 @@ interface ModalState {
   position: { x: number; y: number }; // Modal position
   isOpen: boolean; // Whether this modal is open
   zIndex: number; // For proper stacking
+  // Flag to indicate if this modal should display certificates instead of project files
+  isCertificates?: boolean;
 }
 
 // Main portfolio desktop page for Syed Mohammad Anas
@@ -56,6 +58,8 @@ export default function Home() {
       // PDF file that opens resume in new tab when clicked
       { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
       { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: 0, z: 1, type: 'folder' },
+      // Hackathon Certificates folder - displays certificates in organized grid view
+      { id: 7, label: "Hackathon Certificates", icon: "/media/Icons/appleFolder.avif", x: -1550, y: 120, z: 1, type: 'folder', isCertificates: true },
     ];
   }, [isMobile]);
 
@@ -116,14 +120,15 @@ export default function Home() {
   };
 
   // Function to create a new modal
-  const createModal = (projectId: number) => {
+  const createModal = (projectId: number, isCertificates?: boolean) => {
     const modalId = `modal-${projectId}-${Date.now()}`; // Unique ID
     const newModal: ModalState = {
       id: modalId,
       projectId,
       position: generateRandomPosition(),
       isOpen: true,
-      zIndex: 100 + modals.length // Stack modals properly
+      zIndex: 100 + modals.length, // Stack modals properly
+      isCertificates: isCertificates,
     };
 
     setModals(prev => [...prev, newModal]);
@@ -185,7 +190,20 @@ export default function Home() {
       return;
     }
 
-    if (item.type === 'folder' && item.label === 'About Me') {
+    // Check for Hackathon Certificates folder first (special case)
+    if (item.type === 'folder' && item.label === 'Hackathon Certificates') {
+      // Check if a modal for certificates already exists
+      const existingModal = modals.find(modal => modal.isCertificates);
+
+      if (existingModal) {
+        // If modal exists, bring it to front
+        bringModalToFront(existingModal.id);
+      } else {
+        // If no modal exists, create a new one with certificates flag
+        // Using projectId 999 for certificates to distinguish from regular projects
+        createModal(999, true);
+      }
+    } else if (item.type === 'folder' && item.label === 'About Me') {
       // Open the three About Me modals on desktop as well
       setAboutModalOneOpen(true);
       setAboutModalTwoOpen(true);
@@ -205,6 +223,9 @@ export default function Home() {
       // Open the PDF file in a new tab
       const pdfUrl = "https://docs.google.com/document/d/13hupz9yVdmgTIzqTdMkv8YybdTJGkZnJ/edit?usp=sharing&ouid=101811674702433936195&rtpof=true&sd=true";
       window.open(pdfUrl, '_blank');
+    } else if (item.type === 'folder' && item.label === 'Hackathon Certificates') {
+      // Open the Hackathon Certificates modal
+      createModal(0, true); // Create a new modal with isCertificates set to true
     }
   };
 
@@ -512,6 +533,7 @@ export default function Home() {
             onSelectProject={(projectId) => handleProjectSelection(modal.id, projectId)}
             initialPosition={modal.position}
             customZIndex={modal.zIndex}
+            isCertificates={modal.isCertificates}
           />
         ))}
 
