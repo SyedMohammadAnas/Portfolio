@@ -99,6 +99,7 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          style={{ zIndex: customZIndex || 101 }}
         >
           {/* Modal window */}
           <motion.div
@@ -108,7 +109,6 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
             exit={{ scale: 0.97, opacity: 0 }}
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
             style={{
-              zIndex: customZIndex || 101,
               left: getInitialPosition().x,
               top: getInitialPosition().y
             }}

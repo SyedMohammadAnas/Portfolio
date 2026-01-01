@@ -210,6 +210,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
           exit={{ opacity: 0 }}
           tabIndex={-1}
           ref={modalRef}
+          style={{ zIndex: customZIndex || 101 }}
         >
           {/* Draggable modal container positioned at custom location */}
           <motion.div
@@ -219,8 +220,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
               height: '350px',
               left: getInitialPosition().x,
               top: getInitialPosition().y,
-              boxShadow: "0 20px 60px 0 rgba(0, 0, 0, 0.4), 0 10px 30px 0 rgba(0, 0, 0, 0.3), 0 5px 15px 0 rgba(0, 0, 0, 0.2)",
-              zIndex: customZIndex || 101 // Use custom z-index if provided, otherwise default to 101
+              boxShadow: "0 20px 60px 0 rgba(0, 0, 0, 0.4), 0 10px 30px 0 rgba(0, 0, 0, 0.3), 0 5px 15px 0 rgba(0,0,0,0.2)"
             }}
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

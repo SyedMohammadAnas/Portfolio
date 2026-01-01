@@ -386,7 +386,7 @@ export default function Home() {
         {isMobile && (
           <div
             className="fixed left-7 top-10 z-30 flex flex-row items-center gap-5 select-none"
-            aria-label="Mobile quick icons" 
+            aria-label="Mobile quick icons"
           >
             {/* About Me (folder icon) */}
             <button
@@ -485,7 +485,7 @@ export default function Home() {
                     }}
                   >
                     <div
-                      className="bg-gray-300 border border-gray-400"
+                      className="bg-blue-200/30 border border-blue-300/50"
                       style={{
                         width: pxToVw(80), // Convert w-20 (80px) to viewport width units
                         height: pxToVh(64), // Convert h-16 (64px) to viewport height units

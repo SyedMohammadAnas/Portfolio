@@ -236,6 +236,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
           exit={{ opacity: 0 }}
           tabIndex={-1}
           ref={modalRef}
+          style={{ zIndex: customZIndex || 101 }}
         >
           {/* Draggable modal container positioned at custom location - matching other modals */}
           <motion.div
@@ -245,8 +246,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
               height: '500px',
               left: getInitialPosition().x,
               top: getInitialPosition().y,
-              boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)",
-              zIndex: customZIndex || 101 // Use custom z-index if provided
+              boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)"
             }}
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
