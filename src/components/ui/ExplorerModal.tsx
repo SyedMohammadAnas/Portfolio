@@ -87,6 +87,8 @@ interface ExplorerModalProps {
   customZIndex?: number;
   // Optional flag to indicate if this modal should display certificates instead of project files
   isCertificates?: boolean;
+  // Optional About Me modal functions - when provided, About Me button will open these modals
+  onAboutMeClick?: () => void;
 }
 
 /**
@@ -108,6 +110,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
   initialPosition,
   customZIndex,
   isCertificates,
+  onAboutMeClick,
 }) => {
   // Get mobile detection state
   const isMobile = useMobileDetection();
@@ -299,12 +302,17 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                         <button
                           key={item.name}
                           className="flex items-center gap-2 px-4 py-1 rounded-md text-sm font-medium text-gray-800/90 hover:bg-white/30 transition-colors"
+                          onClick={() => {
+                            if (item.name === 'About Me' && onAboutMeClick) {
+                              onAboutMeClick();
+                            }
+                          }}
                           onMouseEnter={() => setCursorType("pointinghand")}
                           onMouseLeave={() => setCursorType("normal")}
                         >
                           {/* SVG Icons for each section */}
                           {idx === 0 && (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
                               <path d="M12 12h.01"/>
                               <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
                               <path d="M22 13a18.15 18.15 0 0 1-20 0"/>
@@ -312,13 +320,13 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                             </svg>
                           )}
                           {idx === 1 && (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
                               <circle cx="12" cy="8" r="5"/>
                               <path d="M20 21a8 8 0 0 0-16 0"/>
                             </svg>
                           )}
                           {idx === 2 && (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
                               <path d="M15 12h-5"/>
                               <path d="M15 8h-5"/>
                               <path d="M19 17V5a2 2 0 0 0-2-2H4"/>
@@ -326,7 +334,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                             </svg>
                           )}
                           {idx === 3 && (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
                               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
                               <path d="M3 6h18"/>
                               <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>

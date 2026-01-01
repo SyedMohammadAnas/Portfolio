@@ -44,16 +44,10 @@ We are creating a portfolio page which is a responsive single screen layout  and
 
 ## Testing
 - Dont run the instance unless I ask you to do so
-- Dont create a new Terminal right after prompting or adding a new feature
-- Create a file in logs folder named " logs.txt " that logs in all the succesful attempts of our instances
-- In the logs.txt also mention the failed attempts and the reason for that failed attempt
+- Dont create a new Terminal right after prompting or adding a new Feature
 
 # Github Repository
 - Dont commit unless I ask you to do so
-- Create a good commit message as well as give a good description for the commit
-- Create a file in logs folder named " commits.txt " that logs in the commit hashes with the description of each commit
-- Push the commits to Origin after 3 successful commits
-
 
 ## AI Assistant Preferences
 - Begin the prompt with  " 🤖 : " always

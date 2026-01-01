@@ -50,14 +50,14 @@ export default function Home() {
     }
     return [
       { id: 1, label: "Project 2", icon: "/media/Icons/appleFolder.avif", x: -450, y: 0, z: 1, type: 'folder', projectId: 2 },
-      { id: 2, label: "Project 01", icon: "/media/Icons/appleFolder.avif", x: -270, y: 120, z: 1, type: 'folder', projectId: 1 },
-      { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -500, y: 270, z: 1, type: 'folder', projectId: 3 },
+      { id: 2, label: "Project 01", icon: "/media/Icons/appleFolder.avif", x: -170, y: 120, z: 1, type: 'folder', projectId: 1 },
+      { id: 3, label: "Project 03", icon: "/media/Icons/appleFolder.avif", x: -300, y: 300, z: 1, type: 'folder', projectId: 3 },
       { id: 4, label: "Don't Look", icon: "/media/Icons/appleTrash.avif", x: -10, y: 360, z: 1, type: 'trash' },
       // PDF file that opens resume in new tab when clicked
       { id: 5, label: "SyedResume.pdf", icon: "/media/Icons/paperLogo.avif", x: -1600, y: -57, z: 1, type: 'file' },
       { id: 6, label: "About Me", icon: "/media/Icons/appleFolder.avif", x: -1400, y: 0, z: 1, type: 'folder' },
       // Hackathon Certificates folder - displays certificates in organized grid view
-      { id: 7, label: "Hackathon Certificates", icon: "/media/Icons/appleFolder.avif", x: -1550, y: 120, z: 1, type: 'folder', isCertificates: true },
+      { id: 7, label: "Certificates", icon: "/media/Icons/appleFolder.avif", x: -1450,y: -520, z: 1, type: 'folder', isCertificates: true },
     ];
   }, [isMobile]);
 
@@ -344,43 +344,6 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center w-full h-full relative">
         {/* --- Animated Starfield Background Layer --- */}
 
-        {/* Centered Portfolio Title with TextModifier Effects, lifted up - hidden on mobile */}
-        {!isMobile && (
-          <div
-            className="fixed inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
-            style={{
-              marginTop: pxToVh(-72)
-            }}
-          >
-            {/* Welcome text - smaller and positioned above, also lifted */}
-            <div style={{ marginTop: pxToVh(68) }}>
-              <TextModifier
-                text="welcome to my"
-                className="font-light tracking-wide text-6xl text-white"
-                baseWeight={400}
-                maxWeight={900}
-                maxScale={1.3}
-                maxOffset={5}
-                animationSpeed={0.2}
-                proximityRadius={100}
-              />
-            </div>
-
-            {/* Main PORTFOLIO text - larger and more prominent, also lifted */}
-            <div className="flex items-center justify-center">
-              <TextModifier
-                text="PORTFOLIO."
-                className="font-extrabold tracking-wider text-9xl text-white"
-                baseWeight={400}
-                maxWeight={900}
-                maxScale={1.3}
-                maxOffset={15}
-                animationSpeed={0.2}
-                proximityRadius={150}
-              />
-            </div>
-          </div>
-        )}
 
         {/* MOBILE-ONLY: Two standalone icons (About Me and SyedResume) rendered on-screen, not in Dock */}
         {isMobile && (
@@ -561,6 +524,11 @@ export default function Home() {
               initialPosition={modal.position}
               customZIndex={modal.zIndex}
               isCertificates={modal.isCertificates}
+              onAboutMeClick={() => {
+                setAboutModalOneOpen(true);
+                setAboutModalTwoOpen(true);
+                setAboutModalTextOpen(true);
+              }}
             />
           </div>
         ))}
@@ -576,7 +544,7 @@ export default function Home() {
             title="This is"
             width={aboutImg1Size.w}
             height={aboutImg1Size.h}
-            initialPosition={getCenteredPosition(aboutImg1Size.w, aboutImg1Size.h, -260, -60)}
+            initialPosition={getCenteredPosition(aboutImg1Size.w, aboutImg1Size.h, -400, -180)}
             customZIndex={aboutModalOneZIndex}
           >
             {/* Image content: no extra padding/background; window should hug the image */}
@@ -604,7 +572,7 @@ export default function Home() {
             title="Syed Mohammad Anas"
             width={aboutImg2Size.w}
             height={aboutImg2Size.h}
-            initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, 60, -60)}
+            initialPosition={getCenteredPosition(aboutImg2Size.w, aboutImg2Size.h, -120, -60)}
             customZIndex={aboutModalTwoZIndex}
           >
             <div className="w-full h-full flex items-center justify-center bg-transparent">
@@ -631,7 +599,7 @@ export default function Home() {
             title="aboutMe.txt"
             width={260}
             height={360}
-            initialPosition={getCenteredPosition(560, 360, 140, 80)}
+            initialPosition={getCenteredPosition(900, 360, -40, 150)}
             customZIndex={aboutModalTextZIndex}
           >
             {/* Simple text-style content */}
