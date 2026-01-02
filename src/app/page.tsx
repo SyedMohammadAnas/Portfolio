@@ -273,7 +273,7 @@ export default function Home() {
   }, []);
 
   // Fit an image into the viewport while keeping aspect ratio and adding safe margins
-  const getFittedSize = (origW: number, origH: number) => {
+  const getFittedSize = React.useCallback((origW: number, origH: number) => {
     const vw = viewport.w || (typeof window !== 'undefined' ? window.innerWidth : 0);
     const vh = viewport.h || (typeof window !== 'undefined' ? window.innerHeight : 0);
     // Safe margins (account for menu/dock on mobile a bit more)
@@ -288,11 +288,11 @@ export default function Home() {
     const w = Math.floor(origW * scale);
     const h = Math.floor(origH * scale);
     return { w, h };
-  };
+  }, [viewport, isMobile]);
 
   // Compute sizes for both images using intrinsic metadata
-  const aboutImg1Size = React.useMemo(() => getFittedSize(aboutMeImg1.width-52, aboutMeImg1.height), [viewport, isMobile]);
-  const aboutImg2Size = React.useMemo(() => getFittedSize(aboutMeImg2.width-133, aboutMeImg2.height), [viewport, isMobile]);
+  const aboutImg1Size = React.useMemo(() => getFittedSize(aboutMeImg1.width-52, aboutMeImg1.height), [getFittedSize]);
+  const aboutImg2Size = React.useMemo(() => getFittedSize(aboutMeImg2.width-133, aboutMeImg2.height), [getFittedSize]);
 
   // Utility: compute window-centered positions with small offsets so windows are visible together
   const getCenteredPosition = (width: number, height: number, offsetX = 0, offsetY = 0) => {
