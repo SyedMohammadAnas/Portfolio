@@ -3,6 +3,11 @@ import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useCursor } from "./useCursor";
 
+interface StickyNoteProps {
+  onClose: () => void;
+  customZIndex?: number;
+}
+
 /**
  * StickyNote - A sticky note styled To-Do list for the desktop UI.
  * - Animated in with Framer Motion
@@ -10,8 +15,9 @@ import { useCursor } from "./useCursor";
  * - MacBook-style top bar with close dots and title
  * - Accepts onClose prop for closing
  * - Draggable within viewport, with custom drag cursor
+ * - Accepts customZIndex prop for proper modal stacking
  */
-const StickyNote: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const StickyNote: React.FC<StickyNoteProps> = ({ onClose, customZIndex }) => {
   // Ref for the sticky note element
   const noteRef = useRef<HTMLDivElement>(null);
   // State for drag constraints
@@ -78,7 +84,8 @@ const StickyNote: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -40 }}
       transition={{ duration: 0.7, delay: 0.2 }}
-      className="absolute left-8 top-16 z-[150]" // Back to simple top-left positioning
+      className="absolute left-8 top-16" // Back to simple top-left positioning
+      style={{ zIndex: customZIndex || 150 }}
       drag
       dragConstraints={constraints}
       dragMomentum={false}

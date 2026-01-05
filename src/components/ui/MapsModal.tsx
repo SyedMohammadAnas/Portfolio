@@ -158,7 +158,7 @@ const MapsModal: React.FC<MapsModalProps> = ({
                   <button
                     aria-label="Close"
                     onClick={handleClose}
-                    className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform"
+                    className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform p-1 -m-1"
                     style={{ boxShadow: '0 1px 2px #0002' }}
                     onMouseEnter={() => setCursorType("pointinghand")}
                     onMouseLeave={() => setCursorType("normal")}
@@ -166,7 +166,7 @@ const MapsModal: React.FC<MapsModalProps> = ({
                   <button
                     aria-label="Minimize"
                     onClick={handleClose}
-                    className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform"
+                    className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform p-1 -m-1"
                     style={{ boxShadow: '0 1px 2px #0002' }}
                     onMouseEnter={() => setCursorType("pointinghand")}
                     onMouseLeave={() => setCursorType("normal")}
@@ -174,7 +174,7 @@ const MapsModal: React.FC<MapsModalProps> = ({
                   <button
                     aria-label="Maximize"
                     onClick={handleClose}
-                    className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform"
+                    className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform p-1 -m-1"
                     style={{ boxShadow: '0 1px 2px #0002' }}
                     onMouseEnter={() => setCursorType("pointinghand")}
                     onMouseLeave={() => setCursorType("normal")}

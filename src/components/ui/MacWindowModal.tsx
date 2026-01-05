@@ -103,21 +103,21 @@ const MacWindowModal: React.FC<MacWindowModalProps> = ({
                 <button
                   aria-label="Close"
                   onClick={onClose}
-                  className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform"
+                  className="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10 shadow hover:scale-110 transition-transform p-1 -m-1"
                   onMouseEnter={() => setCursorType("pointinghand")}
                   onMouseLeave={() => setCursorType("normal")}
                 />
                 <button
                   aria-label="Minimize"
                   onClick={onClose}
-                  className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform"
+                  className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10 shadow hover:scale-110 transition-transform p-1 -m-1"
                   onMouseEnter={() => setCursorType("pointinghand")}
                   onMouseLeave={() => setCursorType("normal")}
                 />
                 <button
                   aria-label="Maximize"
                   onClick={onClose}
-                  className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform"
+                  className="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10 shadow hover:scale-110 transition-transform p-1 -m-1"
                   onMouseEnter={() => setCursorType("pointinghand")}
                   onMouseLeave={() => setCursorType("normal")}
                 />
