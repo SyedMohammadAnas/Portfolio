@@ -48,18 +48,13 @@ const mobileDockIcons = [
   { src: "/media/IconsPNG/githubLogo2.png", alt: "GitHub" },
 ];
 
-interface DockProps {
-  stickyNoteZIndex?: number;
-  onStickyNoteBringToFront?: () => void;
-}
-
 /**
  * Dock component replicating the MacBook dock visually and interactively.
  * - Uses only .avif icons from /public/media/Icons
  * - Framer-like icon rendering: object-fit: fill, object-position: center
  * - Responsive, glassy, and sharp
  */
-const Dock: React.FC<DockProps> = ({ stickyNoteZIndex, onStickyNoteBringToFront }) => {
+const Dock: React.FC = () => {
   const setCursorType = useCursor(); // Get cursor setter
   const isMobile = useMobileDetection(); // Get mobile detection state
   // All hooks must be called before any return (React rules of hooks)
@@ -193,17 +188,9 @@ const Dock: React.FC<DockProps> = ({ stickyNoteZIndex, onStickyNoteBringToFront 
         />
       </div>
       {/* Render StickyNote if open */}
-      <div
-        onMouseDown={onStickyNoteBringToFront}
-        onClick={onStickyNoteBringToFront}
-      >
-        {stickyNoteOpen && (
-          <StickyNote
-            onClose={() => setStickyNoteOpen(false)}
-            customZIndex={stickyNoteZIndex}
-          />
-        )}
-      </div>
+      {stickyNoteOpen && (
+        <StickyNote onClose={() => setStickyNoteOpen(false)} />
+      )}
       {/* Render PhotoGalleryModal if open */}
       <div
         onMouseDown={() => bringModalToFront('gallery')}

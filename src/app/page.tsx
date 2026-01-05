@@ -251,9 +251,6 @@ export default function Home() {
   const [aboutModalTwoZIndex, setAboutModalTwoZIndex] = useState(122);
   const [aboutModalTextZIndex, setAboutModalTextZIndex] = useState(123);
 
-  // Z-index management for StickyNote
-  const [stickyNoteZIndex, setStickyNoteZIndex] = useState(124);
-
   // Function to bring About Me modal to front
   const bringAboutModalToFront = (modalType: 'one' | 'two' | 'text') => {
     const maxZ = Math.max(aboutModalOneZIndex, aboutModalTwoZIndex, aboutModalTextZIndex);
@@ -263,21 +260,6 @@ export default function Home() {
       setAboutModalTwoZIndex(maxZ + 1);
     } else if (modalType === 'text' && aboutModalTextZIndex < maxZ) {
       setAboutModalTextZIndex(maxZ + 1);
-    }
-  };
-
-  // Function to bring StickyNote to front
-  const bringStickyNoteToFront = () => {
-    const allZIndexes = [
-      ...modals.map(m => m.zIndex),
-      aboutModalOneZIndex,
-      aboutModalTwoZIndex,
-      aboutModalTextZIndex,
-      stickyNoteZIndex
-    ];
-    const maxZ = Math.max(...allZIndexes);
-    if (stickyNoteZIndex < maxZ) {
-      setStickyNoteZIndex(maxZ + 1);
     }
   };
 
@@ -525,10 +507,7 @@ export default function Home() {
 
 
         {/* Dock (bottom center) */}
-        <Dock
-          stickyNoteZIndex={stickyNoteZIndex}
-          onStickyNoteBringToFront={bringStickyNoteToFront}
-        />
+        <Dock />
 
         {/* Multiple Explorer Modals - render all open modals */}
         {modals.map((modal) => (

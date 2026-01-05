@@ -99,7 +99,7 @@ const MacWindowModal: React.FC<MacWindowModalProps> = ({
           >
             {/* Title bar with traffic-light buttons */}
             <div className="flex items-center h-8 px-4 border-b border-gray-200 bg-gray-50 relative select-none w-full">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <button
                   aria-label="Close"
                   onClick={onClose}

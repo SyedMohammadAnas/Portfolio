@@ -260,7 +260,7 @@ const ExplorerModal: React.FC<ExplorerModalProps> = ({
                 }}
               >
                 {/* Mac window controls at the top of sidebar */}
-                <div className="flex items-center gap-2 mt-3 mb-6 px-4">
+                <div className="flex items-center gap-3 mt-3 mb-6 px-4">
                   {/* Window controls: set cursor to pointinghand on hover */}
                   <button
                     aria-label="Close"

@@ -127,7 +127,7 @@ const PhotoGalleryModal: React.FC<PhotoGalleryModalProps> = ({ isOpen, onClose, 
             {/* MacOS-style title bar */}
             <div className="flex items-center h-8 px-4 border-b border-gray-200 bg-gray-50 relative select-none w-full">
               {/* Window controls: set cursor to pointinghand on hover */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <button
                   aria-label="Close"
                   onClick={onClose}

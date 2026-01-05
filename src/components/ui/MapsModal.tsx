@@ -154,7 +154,7 @@ const MapsModal: React.FC<MapsModalProps> = ({
                 }}
               >
                 {/* Mac window controls at the top of sidebar - matching other modals */}
-                <div className="flex items-center gap-2 mt-3 mb-6 px-4">
+                <div className="flex items-center gap-3 mt-3 mb-6 px-4">
                   <button
                     aria-label="Close"
                     onClick={handleClose}
